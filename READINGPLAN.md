@@ -1,7 +1,7 @@
-1. Green book - Rendering chp 5
-2. Green book - Rendering chp 6
 3. RTR - chp 1
 4. RTR - chp 2
+1. Green book - Rendering chp 5
+2. Green book - Rendering chp 6
 5. RTR - chp 3
 6. RTR - chp 4
 7. Green book - Rendering chp 7
