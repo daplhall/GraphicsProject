@@ -1,0 +1,23 @@
+@startuml AcritectureOverview
+
+node RenderingPipeline{
+    package Application{
+        [Program Logic]
+    }
+    package GeometryApplication{
+        [VertexShading] - [Projection]
+        [Projection] - [Clipping]
+        [Clipping] - [ScreenMapping]
+    }
+    package Rasterization {
+        [Triangle Setup] -> [Triangle Traversal]
+    }
+    package PixelProccesing{
+        [Pixel Shading] -> [Merging]
+}
+}
+
+Application --> GeometryApplication
+GeometryApplication --> Rasterization 
+Rasterization --> PixelProccesing
+@enduml
