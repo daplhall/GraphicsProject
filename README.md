@@ -14,7 +14,8 @@ This project is a redoing and futhere implementation of a simple terminal based 
 3. Physically Based Rendering From Theory To Implementation 4th Edition
 
 ### Tutorials
-https://github.com/AndreVallestero/sdl-vulkan-tutorial
+1. [SDL and Vulkan](https://github.com/AndreVallestero/sdl-vulkan-tutorial)
+2. [Github and Jenkins](https://stackoverflow.com/questions/70989970/how-to-block-the-ability-to-merge-the-feature-branch-into-the-main-branch-when-a)
 
 ### Third Party Libaries
 Third party libraries are downloaded and used with CMake
