@@ -9,66 +9,68 @@
             "binaryDir": "${sourceDir}/build/${presetName}"
         },
         {
-            "name": "ci-base",
+            "name": "gnu-linux",
             "hidden": true,
-            "environment": {
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "1",
-                "CMAKE_POLICY_VERSION_MINIMUM": "3.5",
-                "RASTER_C_LDFLAGS": "",
-                "RASTER_C_DEFAULT_FLAGS": "-Wall -Werror -Wextra -Wpedantic -Wformat=2 -Wno-unused-parameter -Wshadow -Wwrite-strings -Wstrict-prototypes -Wold-style-definition -Wredundant-decls -Wnested-externs -Wmissing-include-dirs  -Wuninitialized",
-                "RASTER_DEBUG_FLAGS": "-g3 -O0",
-                "RASTER_SANITIZER_FLAGS": "-fsanitize=address -fsanitize=leak",
-                "RASTER_RELEASE_FLAGS": "",
-                "RASTER_RELWITHDEBINFO_FLAGS": ""
+            "toolchainFile": "${sourceDir}/cmake/gnu-linux.toolchain.cmake"
+        },
+        {
+            "name": "debug",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {
-            "name": "ci-debug",
-            "inherits": [
-                "ci-base",
-                "ninja"
-            ],
-            "displayName": "Base debug config",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            },
-            "toolchainFile": "${sourceDir}/cmake/gnu-linux.cmake"
-        },
-        {
-            "name": "ci-release",
-            "inherits": [
-                "ci-base",
-                "ninja"
-            ],
-            "displayName": "base release config",
+            "name": "release",
+            "hidden": true,
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
         },
         {
-            "name": "ci-rel-debug",
-            "inherits": [
-                "ci-base",
-                "ninja"
-            ],
-            "displayName": "base RelWithDebInfo config",
+            "name": "rel-debug",
+            "hidden": true,
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "RelWithDebInfo"
             }
+        },
+        {
+            "name": "ci-linux-debug",
+            "inherits": [
+                "ninja",
+                "gnu-linux",
+                "debug"
+            ]
+        },
+        {
+            "name": "ci-linux-release",
+            "inherits": [
+                "ninja",
+                "gnu-linux",
+                "release"
+            ]
+        },
+        {
+            "name": "ci-linux-rel-debug",
+            "inherits": [
+                "ninja",
+                "gnu-linux",
+                "rel-debug"
+            ]
         }
     ],
     "buildPresets": [
         {
-            "name": "release",
-            "configurePreset": "ci-release"
+            "name": "linux-release",
+            "configurePreset": "ci-linux-release"
         },
         {
-            "name": "debug",
-            "configurePreset": "ci-debug"
+            "name": "linux-debug",
+            "configurePreset": "ci-linux-debug"
         },
         {
-            "name": "rel-debug",
-            "configurePreset": "ci-rel-debug"
+            "name": "linux-rel-debug",
+            "configurePreset": "ci-linux-rel-debug"
         }
     ]
 }
