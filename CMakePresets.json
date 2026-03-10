@@ -1,0 +1,74 @@
+{
+    "version": 6,
+    "include": [],
+    "configurePresets": [
+        {
+            "name": "ninja",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}"
+        },
+        {
+            "name": "ci-base",
+            "hidden": true,
+            "environment": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "1",
+                "CMAKE_POLICY_VERSION_MINIMUM": "3.5",
+                "RASTER_C_LDFLAGS": "",
+                "RASTER_C_DEFAULT_FLAGS": "-Wall -Werror -Wextra -Wpedantic -Wformat=2 -Wno-unused-parameter -Wshadow -Wwrite-strings -Wstrict-prototypes -Wold-style-definition -Wredundant-decls -Wnested-externs -Wmissing-include-dirs  -Wuninitialized",
+                "RASTER_DEBUG_FLAGS": "-g3 -O0",
+                "RASTER_SANITIZER_FLAGS": "-fsanitize=address -fsanitize=leak",
+                "RASTER_RELEASE_FLAGS": "",
+                "RASTER_RELWITHDEBINFO_FLAGS": ""
+            }
+        },
+        {
+            "name": "ci-debug",
+            "inherits": [
+                "ci-base",
+                "ninja"
+            ],
+            "displayName": "Base debug config",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            },
+            "toolchainFile": "${sourceDir}/cmake/gnu-linux.cmake"
+        },
+        {
+            "name": "ci-release",
+            "inherits": [
+                "ci-base",
+                "ninja"
+            ],
+            "displayName": "base release config",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "ci-rel-debug",
+            "inherits": [
+                "ci-base",
+                "ninja"
+            ],
+            "displayName": "base RelWithDebInfo config",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "release",
+            "configurePreset": "ci-release"
+        },
+        {
+            "name": "debug",
+            "configurePreset": "ci-debug"
+        },
+        {
+            "name": "rel-debug",
+            "configurePreset": "ci-rel-debug"
+        }
+    ]
+}
