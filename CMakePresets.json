@@ -1,0 +1,76 @@
+{
+    "version": 6,
+    "include": [],
+    "configurePresets": [
+        {
+            "name": "ninja",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}"
+        },
+        {
+            "name": "gnu-linux",
+            "hidden": true,
+            "toolchainFile": "${sourceDir}/cmake/gnu-linux.toolchain.cmake"
+        },
+        {
+            "name": "debug",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "release",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "rel-debug",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "ci-linux-debug",
+            "inherits": [
+                "ninja",
+                "gnu-linux",
+                "debug"
+            ]
+        },
+        {
+            "name": "ci-linux-release",
+            "inherits": [
+                "ninja",
+                "gnu-linux",
+                "release"
+            ]
+        },
+        {
+            "name": "ci-linux-relwithdeb",
+            "inherits": [
+                "ninja",
+                "gnu-linux",
+                "rel-debug"
+            ]
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "linux-release",
+            "configurePreset": "ci-linux-release"
+        },
+        {
+            "name": "linux-debug",
+            "configurePreset": "ci-linux-debug"
+        },
+        {
+            "name": "linux-relwithdeb",
+            "configurePreset": "ci-linux-relwithdeb"
+        }
+    ]
+}
