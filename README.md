@@ -25,3 +25,11 @@ Third party libraries are downloaded and used with CMake
 ### Requirements
 1. CMake
 2. GNU Compiler
+
+# Build
+With presets defined one can build with
+```
+mkdir build && cd build
+cmake --presets <preset>
+cmake --build --preset <preset>
+```
