@@ -51,7 +51,7 @@
             ]
         },
         {
-            "name": "ci-linux-rel-debug",
+            "name": "ci-linux-relwithdeb",
             "inherits": [
                 "ninja",
                 "gnu-linux",
@@ -69,8 +69,8 @@
             "configurePreset": "ci-linux-debug"
         },
         {
-            "name": "linux-rel-debug",
-            "configurePreset": "ci-linux-rel-debug"
+            "name": "linux-relwithdeb",
+            "configurePreset": "ci-linux-relwithdeb"
         }
     ]
 }

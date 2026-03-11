@@ -12,4 +12,5 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 add_subdirectory(src)
 
 enable_testing()
-include(dependencies.cmake)
+include(cmake/FindGoogleTest.cmake)
+include(cmake/FindSDL.cmake)
