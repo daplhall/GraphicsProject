@@ -1,4 +1,5 @@
 set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(RASTER_CONFIG_FLAGS "-g3" "-O0")
@@ -33,4 +34,10 @@ set(RASTER_CFLAGS
 )
 set(RASTER_LCFLAGS
     ${RASTER_SANITIZER_FLAGS}
+)
+
+execute_process(
+    COMMAND ${CMAKE_COMMAND} -E create_symlink
+    ${CMAKE_BINARY_DIR}/compile_commands.json
+    ${CMAKE_SOURCE_DIR}/compile_commands.json
 )
