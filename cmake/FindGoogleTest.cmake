@@ -1,4 +1,3 @@
-find_package(SDL3
-    REQUIRED
+find_package(GTest REQUIRED
     HINTS ${CMAKE_CURRENT_SOURCE_DIR}/external/googletest/.install
 )
