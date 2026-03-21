@@ -1,0 +1,17 @@
+@startuml Allocator
+    top to bottom direction
+
+    interface Allocator
+    interface Array{
+        - items
+        - capacity : Part of Array_Header macro
+        - count : Part of Array_Header macro
+
+        + Get(index) : Macro
+        + Count() : Macro
+        + Capacity() : Macro
+        + Set(index) : Macro
+    }
+    
+    Allocator --> Array    
+@enduml
