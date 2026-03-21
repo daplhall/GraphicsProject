@@ -9,9 +9,9 @@
             "binaryDir": "${sourceDir}/build/${presetName}"
         },
         {
-            "name": "gnu-linux",
+            "name": "gnu",
             "hidden": true,
-            "toolchainFile": "${sourceDir}/cmake/gnu-linux.toolchain.cmake"
+            "toolchainFile": "${sourceDir}/cmake/gnu.toolchain.cmake"
         },
         {
             "name": "debug",
@@ -38,7 +38,7 @@
             "name": "ci-linux-debug",
             "inherits": [
                 "ninja",
-                "gnu-linux",
+                "gnu",
                 "debug"
             ]
         },
@@ -46,7 +46,7 @@
             "name": "ci-linux-release",
             "inherits": [
                 "ninja",
-                "gnu-linux",
+                "gnu",
                 "release"
             ]
         },
@@ -54,7 +54,7 @@
             "name": "ci-linux-relwithdeb",
             "inherits": [
                 "ninja",
-                "gnu-linux",
+                "gnu",
                 "rel-debug"
             ]
         }
