@@ -33,3 +33,15 @@ mkdir build && cd build
 cmake --presets <preset>
 cmake --build --preset <preset>
 ```
+
+## Externals
+Externals are all saved to the External folder, and then build indivudally with the following steps
+```
+mkdir build && cd build
+cmake -DCMAKE_INSTALL_PREFIX:PATH=../.install .. 
+cmake --build . --target install
+```
+This will install the targets in a ./install folder at the root of that external projects directory.
+We will target this with our CMake files 
+
+Benefits, this allows the project to be self contained and we avoid having to build the libraries everytime we clean our own objects.
