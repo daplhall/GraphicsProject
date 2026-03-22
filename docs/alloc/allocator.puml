@@ -1,17 +1,34 @@
 @startuml Allocator
     top to bottom direction
 
-    interface Allocator
-    interface Array{
-        - items
-        - capacity : Part of Array_Header macro
-        - count : Part of Array_Header macro
-
-        + Get(index) : Macro
-        + Count() : Macro
-        + Capacity() : Macro
-        + Set(index) : Macro
+    interface Allocator{
+        When passes to a ADT then all of that ABT will beallocated with the given allocator
+        + malloc(capacity)        
+        + calloc(n, size)
+        + realloc(ptr, capacity);  
+        + free(capacity)        
+    }
+    interface ADT{
+        + ADT(..., Allocator)
+        - Allocator: If in need of furture allocation (Implemnation detail)
     }
     
-    Allocator --> Array    
+    class Arena{
+        Arena allocator - Task life time
+    }
+    class Bedrock{
+        The standard singleton allocator - Single variable lifetime
+
+    }
+    class Atom {
+        The Atom allocator - lifetime program life
+        Once somthing is atomized, it lives for the rest of the program
+    }
+
+    
+    ADT --> Allocator
+    Arena .up.|> Allocator
+    Bedrock .up.|> Allocator
+    Atom .up.|> Allocator
+    
 @enduml
