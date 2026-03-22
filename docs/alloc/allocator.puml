@@ -14,21 +14,21 @@
     }
     
     class Arena{
-        Arena allocator - Task life time
+        Arena allocator - Collective Lifetime
     }
     class Bedrock{
-        The standard singleton allocator - Single variable lifetime
-
+        The allocator - Individual Lifetime
     }
     class Atom {
-        The Atom allocator - lifetime program life
-        Once somthing is atomized, it lives for the rest of the program
+        The Atom allocator - Eternal Lifetime
     }
 
     
     ADT --> Allocator
     Arena .up.|> Allocator
-    Bedrock .up.|> Allocator
+    Bedrock .up.|> Allocator : Bedcrock_allocator()
     Atom .up.|> Allocator
+    Arena --> Bedrock
+    Atom --> Bedrock
     
 @enduml
