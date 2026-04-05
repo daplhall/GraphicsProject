@@ -30,6 +30,16 @@
     class FreeListArena{
         
     }
+    Interface Mem{
+        + MALLOC
+        + CALLOC
+        + REALLOC
+        + FREE
+        + NEW
+        
+        + GetError
+        + ErrorMessage
+    }
     ADT --> Arena
     ADT --> PoolArena : Depends on need
     ADT --> SubArena : Depends on need
@@ -37,5 +47,5 @@
     SubArena --> Arena
     StackArena ..|> Arena
     FreeListArena ..|> Arena
-    Arena --> MALLOC
+    Arena --> Mem
 @enduml
