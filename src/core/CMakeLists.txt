@@ -1,18 +1,11 @@
-add_executable(main
-    main.c
+add_library(Core
+    arena.c
+    mem.c
 )
 
-target_link_libraries(main
+target_include_directories(Core
     PRIVATE
-    SDL3::SDL3
-)
-
-target_compile_options(main
-    PRIVATE
-    ${RASTER_CFLAGS}
-)
-
-target_link_options(main
-    PRIVATE
-    ${RASTER_LCFLAGS}
+    .
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
 )

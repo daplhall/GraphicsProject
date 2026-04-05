@@ -3,18 +3,17 @@
 
 #ifdef __cplusplus
 extern "C" {
-#include <cstddef>
-#else 
-#include <stddef.h>
 #endif 
-#include <arenas/arena.h>
+#include <core/arena.h>
+#include <stddef.h>
 
 
-#define T StackArena
+#define T Arena
 
-typedef struct _StackArena * T;
+typedef struct _Arena T;
 
-T Arena_StackAlloc(size_t capacity);
+T * Arena_create(size_t capacity);
+void Arena_release(T *arena);
 
     
 #undef T

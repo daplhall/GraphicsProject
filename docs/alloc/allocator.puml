@@ -1,34 +1,41 @@
 @startuml Allocator
     top to bottom direction
 
-    interface Allocator{
-        When passes to a ADT then all of that ABT will beallocated with the given allocator
-        + malloc(capacity)        
-        + calloc(n, size)
-        + realloc(ptr, capacity);  
-        + free(capacity)        
-    }
-    interface ADT{
-        + ADT(..., Allocator)
-        - Allocator: If in need of furture allocation (Implemnation detail)
+    interface "Dynamiclly allocated ADT" as ADT{
+        This needs to be on a Allocator by allocator basis
+        + ADT(..., arena)
     }
     
-    class Arena{
+    Interface Arena{
         Arena allocator - Collective Lifetime
+        Staticlly linked interface
     }
-    class Bedrock{
-        The allocator - Individual Lifetime
-    }
-    class Atom {
-        The Atom allocator - Eternal Lifetime
+    
+    Interface PoolArena{
+        A sub arena which implmenets a pool allocator
+        for the region defined
+        Staticlly linked interface
+        if a problems this behavior it uses it like its own personal arena
+        + PoolArena(Arena)
     }
 
-    
-    ADT --> Allocator
-    Arena .up.|> Allocator
-    Bedrock .up.|> Allocator : Bedcrock_allocator()
-    Atom .up.|> Allocator
-    Arena --> Bedrock
-    Atom --> Bedrock
-    
+    Interface SubArena{
+        Used to define a sub section of an arena, 
+        that is normal own arena
+        Staticlly linked interface
+        + SubArena(Arena)
+    }
+    class StackArena {
+    }
+    class FreeListArena{
+        
+    }
+    ADT --> Arena
+    ADT --> PoolArena : Depends on need
+    ADT --> SubArena : Depends on need
+    PoolArena --> Arena
+    SubArena --> Arena
+    StackArena ..|> Arena
+    FreeListArena ..|> Arena
+    Arena --> MALLOC
 @enduml
