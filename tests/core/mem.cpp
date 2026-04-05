@@ -8,12 +8,6 @@ TEST_F(Alloc, Alloc){
     ASSERT_TRUE(allocated != NULL);
 }
 
-TEST_F(Alloc, BadCapacity){
-    int *a = (int *)ALLOC(0);
-    ASSERT_TRUE(a == NULL);
-    ASSERT_TRUE(Mem_GetError() == MEM_BAD_CAPACITY);
-}
-
 TEST_F(Alloc, FreeNull){
     ASSERT_TRUE(FREE(NULL) == MEM_BAD_POINTER);
 }
@@ -21,19 +15,6 @@ TEST_F(Alloc, FreeNull){
 TEST_F(Calloc, Alloc){
     ASSERT_TRUE(allocated != NULL) ;
     ASSERT_TRUE(*allocated == 0);
-}
-
-TEST_F(Calloc, BadBytes){
-    int *a = (int *)CALLOC(1, 0);
-    ASSERT_TRUE(a == NULL);
-    ASSERT_TRUE(Mem_GetError() == MEM_BAD_NBYTES);
-
-}
-
-TEST_F(Calloc, BadCount){
-    int *a = (int *)CALLOC(0, sizeof(int));
-    ASSERT_TRUE(a == NULL);
-    ASSERT_TRUE(Mem_GetError() == MEM_BAD_COUNT);
 }
 
 TEST_F(Realloc, Alloc){

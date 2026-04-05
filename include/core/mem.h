@@ -8,10 +8,6 @@ extern "C" {
 enum Mem_error {
 	MEM_OK = 0,
 	MEM_BAD_POINTER,
-	MEM_BAD_CAPACITY,
-	MEM_BAD_NBYTES,
-	MEM_BAD_COUNT,
-	MEM_BAD_SIZE,
 };
 
 #define ALLOC(capacity) Mem_alloc((capacity), __FILE__, __LINE__)

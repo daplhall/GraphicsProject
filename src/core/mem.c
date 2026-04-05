@@ -5,9 +5,8 @@
 
 thread_local static enum Mem_error error = MEM_OK;
 static char const *error_messages[] = {
-	"No error occured",	    "Pointer input is null",
-	"Capacity is zero or less", "Nbytes is zero or less",
-	"Count is zero or less",
+	"No error occured",
+	"Pointer input is null",
 };
 
 enum Mem_error
@@ -25,10 +24,7 @@ Mem_ErrorMessage (enum Mem_error error)
 void *
 Mem_alloc (size_t capacity, char const *file, int line)
 {
-	if (capacity <= 0) {
-		error = MEM_BAD_CAPACITY;
-		return NULL;
-	}
+	assert (capacity > 0);
 	error = MEM_OK;
 	return malloc (capacity);
 }
@@ -36,14 +32,8 @@ Mem_alloc (size_t capacity, char const *file, int line)
 void *
 Mem_calloc (size_t count, size_t nbytes, char const *file, int line)
 {
-	if (nbytes <= 0) {
-		error = MEM_BAD_NBYTES;
-	} else if (count <= 0) {
-		error = MEM_BAD_COUNT;
-	}
-	if (error != MEM_OK) {
-		return NULL;
-	}
+	assert (count > 0);
+	assert (nbytes > 0);
 
 	error = MEM_OK;
 	return calloc (count, nbytes);
@@ -52,13 +42,11 @@ Mem_calloc (size_t count, size_t nbytes, char const *file, int line)
 void *
 Mem_realloc (void *to_realloc, size_t new_size, char const *file, int line)
 {
-	if (to_realloc == NULL)
+	assert (new_size > 0);
+	if (to_realloc == NULL) {
 		error = MEM_BAD_POINTER;
-	else if (new_size <= 0)
-		error = MEM_BAD_SIZE;
-	if (error != MEM_OK)
 		return NULL;
-
+	}
 	error = MEM_OK;
 	return realloc (to_realloc, new_size);
 }
