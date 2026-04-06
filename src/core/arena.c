@@ -1,7 +1,11 @@
 #include "core/arena.h"
 #include "core/mem.h"
+#include <assert.h>
+#include <stdbool.h>
+#include <stdint.h>
 
 #define T Arena
+#define ALIGNMENT
 
 struct _Arena {
 	size_t capcity;
@@ -9,6 +13,12 @@ struct _Arena {
 	enum Arena_error errno;
 	char *mem;
 };
+
+static bool
+is_power_of_two (size_t align)
+{
+	return align & (align - 1);
+}
 
 T *
 Arena_create (size_t capacity, enum Arena_type type)
@@ -33,15 +43,18 @@ Arena_release (T *arena)
 }
 
 void *
-Arena_push (T *arena, size_t nbytes)
+Arena_push (T *arena, size_t nbytes, size_t align)
 {
-	if (nbytes + arena->offset > arena->capcity) {
+	assert (align != 0);
+	assert (is_power_of_two (align) == 0);
+	size_t aligned_offset = (arena->offset + align - 1) & ~(align - 1);
+	if (nbytes + aligned_offset > arena->capcity) {
 		arena->errno = ARENA_BAD_ALLOC;
 		return NULL;
 	}
 	arena->errno = ARENA_OK;
-	arena->offset += nbytes;
-	return arena->mem + arena->offset;
+	arena->offset = aligned_offset + nbytes;
+	return arena->mem + aligned_offset;
 }
 
 enum Arena_error

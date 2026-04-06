@@ -23,7 +23,15 @@ target_include_directories(arena-tests
     .
 )
 
+target_compile_options(Core
+    PRIVATE
+    ${RASTER_SANITIZER_FLAGS}
+)
 
+target_link_options(Core
+    PUBLIC
+    ${RASTER_LCFLAGS}
+)
 
 include(GoogleTest)
 gtest_discover_tests(core-tests)

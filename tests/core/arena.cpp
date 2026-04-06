@@ -18,30 +18,30 @@ TEST(Arena, ToMuchMemory){
 
 TEST_F(Arena256, PushSuccess){
     char *ptr;
-    ptr = (char*) Arena_push(arena, 16);     
+    ptr = (char*)Arena_push(arena, 16*sizeof(char), alignof(char));
     ASSERT_TRUE(ptr != NULL);
     ASSERT_TRUE(Arena_GetError(arena) == ARENA_OK);
 }
 
 TEST_F(Arena256, PushSuccessClose){
-    char *ptr = (char*) Arena_push(arena, 256);     
+    char *ptr = (char*) Arena_push(arena, 256*sizeof(char), alignof(char));
     ASSERT_TRUE(ptr != NULL);
     ASSERT_TRUE(Arena_GetError(arena) == ARENA_OK);
 }
 
 TEST_F(Arena256, PushToMuch){
-    char *ptr = (char*) Arena_push(arena, 512);     
+    char *ptr = (char*) Arena_push(arena, 512*sizeof(char), alignof(char));     
     ASSERT_TRUE(ptr == NULL);
     ASSERT_TRUE(Arena_GetError(arena) == ARENA_BAD_ALLOC);
 }
 
 TEST_F(Arena256, PushToMuchTooClose){
-    char *ptr = (char*) Arena_push(arena, 257);     
+    char *ptr = (char*) Arena_push(arena, 257*sizeof(char), alignof(char));     
     ASSERT_TRUE(ptr == NULL);
     ASSERT_TRUE(Arena_GetError(arena) == ARENA_BAD_ALLOC);
 }
 
 TEST_F(Arena256, GetPos){
-    Arena_push(arena, 16);
+    Arena_push(arena, 16*sizeof(char), alignof(char));
     ASSERT_TRUE(Arena_occupied(arena) == 16);
 }
