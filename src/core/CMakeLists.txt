@@ -9,3 +9,13 @@ target_include_directories(Core
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include
 )
+
+target_compile_options(Core
+    PRIVATE
+    ${RASTER_CFLAGS}
+)
+
+target_link_options(Core
+    PUBLIC
+    ${RASTER_LCFLAGS}
+)

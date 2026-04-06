@@ -8,6 +8,7 @@ extern "C" {
 enum Mem_error {
 	MEM_OK = 0,
 	MEM_BAD_POINTER,
+	MEM_BAD_ALLOC,
 };
 
 #define ALLOC(capacity) Mem_alloc((capacity), __FILE__, __LINE__)
@@ -21,7 +22,7 @@ void *Mem_calloc(size_t count, size_t nbytes, char const* file, int line);
 void *Mem_realloc(void *to_realloc, size_t new_size, char const *file, int line);
 int Mem_free(void *ptr, char const* file, int line);
 
-enum Mem_error Mem_GetError();
+enum Mem_error Mem_GetError(void);
 char const * Mem_ErrorMessage(enum Mem_error error);
 
 #ifdef __cplusplus
