@@ -5,9 +5,9 @@
 
 struct _Arena {
 	size_t capcity;
-	size_t nalloc;
-	char *mem;
+	size_t offset;
 	enum Arena_error errno;
+	char *mem;
 };
 
 T *
@@ -19,7 +19,7 @@ Arena_create (size_t capacity, enum Arena_type type)
 	}
 	*mem = (T){
 		.mem = (char *)(mem + 1),
-		.nalloc = 0,
+		.offset = 0,
 		.capcity = capacity,
 		.errno = ARENA_OK,
 	};
@@ -35,13 +35,13 @@ Arena_release (T *arena)
 void *
 Arena_push (T *arena, size_t nbytes)
 {
-	if (nbytes + arena->nalloc > arena->capcity) {
+	if (nbytes + arena->offset > arena->capcity) {
 		arena->errno = ARENA_BAD_ALLOC;
 		return NULL;
 	}
 	arena->errno = ARENA_OK;
-	arena->nalloc += nbytes;
-	return arena->mem + arena->nalloc;
+	arena->offset += nbytes;
+	return arena->mem + arena->offset;
 }
 
 enum Arena_error
@@ -53,5 +53,5 @@ Arena_GetError (T *arena)
 size_t
 Arena_occupied (T *arena)
 {
-	return arena->nalloc;
+	return arena->offset;
 }
