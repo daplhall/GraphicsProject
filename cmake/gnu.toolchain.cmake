@@ -24,6 +24,7 @@ set(RASTER_WARNINGS_FLAGS
     "-Wnested-externs"
     "-Wmissing-include-dirs"
     "-Wuninitialized"
+    #"-Wpadded"
 )
 
 set(RASTER_CFLAGS
