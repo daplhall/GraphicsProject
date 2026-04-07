@@ -45,3 +45,29 @@ TEST_F(Arena256, GetPos){
     Arena_push(arena, 16*sizeof(char), alignof(char));
     ASSERT_TRUE(Arena_occupied(arena) == 16);
 }
+
+TEST_F(Arena256, Alignment64){
+    char *p = (char *)Arena_push(arena, 16*sizeof(char), 64);
+    ASSERT_TRUE((uintptr_t)p%64 == 0);
+}
+
+TEST_F(Arena256, Alignment32){
+    char *p = (char *)Arena_push(arena, 16*sizeof(char), 32);
+    ASSERT_TRUE((uintptr_t)p%32 == 0);
+}
+
+TEST_F(Arena256, Alignment16){
+    char *p = (char *)Arena_push(arena, 16*sizeof(char), 16);
+    ASSERT_TRUE((uintptr_t)p%16 == 0);
+}
+
+TEST_F(Arena256, Alignment4){
+    char *p = (char *)Arena_push(arena, 16*sizeof(char), 4);
+    ASSERT_TRUE((uintptr_t)p%4 == 0);
+}
+
+TEST_F(Arena256, MultiplePush){
+    char *p = (char *)Arena_push(arena, 16*sizeof(char), 4);
+    char *q = (char *)Arena_push(arena, sizeof(char), 4);
+    ASSERT_TRUE(q-p == 16);
+}

@@ -17,7 +17,7 @@ struct _Arena {
 static bool
 is_power_of_two (size_t align)
 {
-	return align & (align - 1);
+	return !(align & (align - 1));
 }
 
 T *
@@ -46,15 +46,17 @@ void *
 Arena_push (T *arena, size_t nbytes, size_t align)
 {
 	assert (align != 0);
-	assert (is_power_of_two (align) == 0);
-	size_t aligned_offset = (arena->offset + align - 1) & ~(align - 1);
+	assert (is_power_of_two (align));
+	size_t aligned_offset = ((intptr_t)arena->mem + arena->offset) % align;
+	size_t out_offset = 0;
 	if (nbytes + aligned_offset > arena->capcity) {
 		arena->errno = ARENA_BAD_ALLOC;
 		return NULL;
 	}
 	arena->errno = ARENA_OK;
-	arena->offset = aligned_offset + nbytes;
-	return arena->mem + aligned_offset;
+	out_offset = arena->offset + aligned_offset;
+	arena->offset = out_offset + nbytes;
+	return arena->mem + out_offset;
 }
 
 enum Arena_error
