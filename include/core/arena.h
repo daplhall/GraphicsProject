@@ -20,6 +20,7 @@ enum Arena_type {
 enum Arena_error{
     ARENA_OK,
     ARENA_BAD_ALLOC,
+    ARENA_BAD_TYPE,
 };
 
 

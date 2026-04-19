@@ -71,3 +71,19 @@ TEST_F(Arena256, MultiplePush){
     char *q = (char *)Arena_push(arena, sizeof(char), 4);
     ASSERT_TRUE(q-p == 16);
 }
+
+TEST_F(ArenaDynamic4, DynamicAllocate){
+    Arena_push(arena, 4, 1);
+    char *p = (char *)Arena_push(arena, 4, 1);
+    ASSERT_TRUE(p != NULL);
+    ASSERT_TRUE(Arena_GetError(arena) == ARENA_OK);
+}
+
+TEST_F(ArenaDynamic4, DynamicAllocateMultiple){
+    Arena_push(arena, 4, 1);
+    for (int i = 0; i < 4; ++i){
+        char *p = (char *)Arena_push(arena, 4, 1);
+        ASSERT_TRUE(p != NULL);
+    }
+    ASSERT_TRUE(Arena_GetError(arena) == ARENA_OK);
+}
