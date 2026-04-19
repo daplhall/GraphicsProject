@@ -6,7 +6,7 @@ extern "C" {
 #endif 
 #include <core/arena.h>
 #include <stddef.h>
-
+#include <stdalign.h>
 
 #define T Arena
 
@@ -24,7 +24,7 @@ enum Arena_error{
 
 
 T * Arena_create(size_t capacity, enum Arena_type type);
-void * Arena_push(T* arena, size_t nbytes);
+void * Arena_push(T* arena, size_t nbytes, size_t alignment);
 void Arena_release(T *arena);
 enum Arena_error Arena_GetError(T *arena);
 size_t Arena_occupied(T *arena);
