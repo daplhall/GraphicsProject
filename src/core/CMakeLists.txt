@@ -1,5 +1,5 @@
 add_library(Core
-    arena.c
+    linear_arena.c
     mem.c
 )
 
