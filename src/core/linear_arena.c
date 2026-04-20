@@ -10,7 +10,7 @@
 
 struct block {
 	struct block *next;
-	size_t capcity;
+	size_t capacity;
 	size_t offset;
 	char *mem;
 };
@@ -21,16 +21,30 @@ struct _Arena {
 	enum Arena_type type;
 };
 
+struct AlignedMem {
+	void *ptr;
+	size_t offset;
+};
+
 static bool
 is_power_of_two (size_t align)
 {
 	return !(align & (align - 1));
 }
 
-static uintptr_t
-alignment_forward (uintptr_t ptr_to_align, size_t align)
+static void
+allocate_block (T *arena)
 {
-	return (ptr_to_align + align - 1) & ~(align - 1);
+	struct block *new;
+	new = (struct block *)ALLOC (sizeof (struct block)
+				     + arena->block->capacity);
+	*new = (struct block){
+		.capacity = arena->block->capacity,
+		.offset = 0,
+		.mem = (char *)(new + 1),
+		.next = arena->block,
+	};
+	arena->block = new;
 }
 
 T *
@@ -48,7 +62,7 @@ Arena_create (size_t capacity, enum Arena_type type)
 	*block = (struct block){
 		.next = NULL,
 		.mem = (char *)(block + 1),
-		.capcity = capacity,
+		.capacity = capacity,
 		.offset = 0,
 	};
 
@@ -72,71 +86,55 @@ Arena_release (T *arena)
 	FREE (arena);
 }
 
-static void *
-static_push (T *arena, size_t nbytes, size_t align)
+static bool
+is_within_capacity (size_t offset, size_t capacity)
 {
-	uintptr_t aligned_ptr;
-	size_t aligned_offset;
-
-	assert (align != 0);
-	assert (is_power_of_two (align));
-
-	aligned_ptr = alignment_forward (
-	    (uintptr_t)arena->block->mem + arena->block->offset, align);
-	aligned_offset = aligned_ptr - (uintptr_t)arena->block->mem;
-
-	if (nbytes + aligned_offset > arena->block->capcity) {
-		arena->errno = ARENA_BAD_ALLOC;
-		return NULL;
-	}
-	arena->errno = ARENA_OK;
-	arena->block->offset += aligned_offset + nbytes;
-	return (void *)aligned_ptr;
+	return offset <= capacity;
 }
 
-static void *
-dynamic_push (T *arena, size_t nbytes, size_t align)
+static uintptr_t
+alignment_forward (uintptr_t ptr_to_align, size_t align)
 {
-	uintptr_t aligned_ptr;
-	size_t aligned_offset;
+	return (ptr_to_align + align - 1) & ~(align - 1);
+}
 
-	assert (align != 0);
-	assert (is_power_of_two (align));
+static struct AlignedMem
+align_by_block (struct block *block, size_t align)
+{
+	uintptr_t aligned_ptr
+	    = alignment_forward ((uintptr_t)block->mem + block->offset, align);
 
-	aligned_ptr = alignment_forward (
-	    (uintptr_t)arena->block->mem + arena->block->offset, align);
-	aligned_offset = aligned_ptr - (uintptr_t)arena->block->mem;
-	if (nbytes + aligned_offset > arena->block->capcity) {
-		struct block *new = (struct block *)ALLOC (
-		    sizeof (struct block) + arena->block->capcity);
-		*new = (struct block){
-			.capcity = arena->block->capcity,
-			.offset = 0,
-			.mem = (char *)(new + 1),
-			.next = arena->block,
-		};
-		arena->block = new;
-		aligned_ptr = alignment_forward (
-		    (uintptr_t)arena->block->mem + arena->block->offset, align);
-		aligned_offset = aligned_ptr - (uintptr_t)arena->block->mem;
-	}
-	arena->errno = ARENA_OK;
-	arena->block->offset += aligned_offset + nbytes;
-	return (void *)aligned_ptr;
+	return (struct AlignedMem){
+		.ptr = (char *)aligned_ptr,
+		.offset = aligned_ptr - (uintptr_t)block->mem,
+	};
 }
 
 void *
 Arena_push (T *arena, size_t nbytes, size_t align)
 {
-	switch (arena->type) {
-	case ARENA_STATIC:
-		return static_push (arena, nbytes, align);
-	case ARENA_DYNMAIC:
-		return dynamic_push (arena, nbytes, align);
-	default:
-		arena->errno = ARENA_BAD_TYPE;
-		return 0;
+	struct AlignedMem aligned;
+
+	assert (align != 0);
+	assert (is_power_of_two (align));
+
+	aligned = align_by_block (arena->block, align);
+
+	if (!is_within_capacity (nbytes + aligned.offset,
+				 arena->block->capacity)) {
+		switch (arena->type) {
+		case ARENA_STATIC:
+			arena->errno = ARENA_BAD_ALLOC;
+			return NULL;
+		case ARENA_DYNMAIC:
+			allocate_block (arena);
+			aligned = align_by_block (arena->block, align);
+			break;
+		}
 	}
+	arena->errno = ARENA_OK;
+	arena->block->offset += aligned.offset + nbytes;
+	return (void *)aligned.ptr;
 }
 
 enum Arena_error
