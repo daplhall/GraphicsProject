@@ -8,6 +8,7 @@ extern "C" {
     
 struct mem_register {
 	void *ptr;
+	size_t amount;
 	char const *file;
 	int line;
 };

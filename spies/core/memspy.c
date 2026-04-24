@@ -18,8 +18,9 @@ Mem_alloc (size_t capacity, char const *file, int line)
 	void *ptr = malloc (capacity);
 	lastest_alloc = (struct mem_register){
 		.ptr = ptr,
+		.amount = capacity,
 		.file = file,
-		line = line,
+		.line = line,
 	};
 	return ptr;
 }
@@ -36,8 +37,9 @@ Mem_calloc (size_t count, size_t nbytes, char const *file, int line)
 	void *ptr = calloc (count, nbytes);
 	lastest_alloc = (struct mem_register){
 		.ptr = ptr,
+		.amount = count * nbytes,
 		.file = file,
-		line = line,
+		.line = line,
 	};
 	return ptr;
 }
@@ -53,6 +55,7 @@ Mem_realloc (void *to_realloc, size_t new_size, char const *file, int line)
 	void *ptr = realloc (to_realloc, new_size);
 	lastest_alloc = (struct mem_register){
 		.ptr = ptr,
+		.amount = new_size,
 		.file = file,
 		line = line,
 	};

@@ -1,7 +1,6 @@
 add_library(memspy
     OBJECT
     core/memspy.c
-    core/arenaspy.c
 )
 
 target_include_directories(memspy

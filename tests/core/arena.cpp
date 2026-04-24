@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <gtest/gtest.h>
 #include "arenafixture.hpp"
+#include "memspy.h"
 
 TEST(Arena, Create){
     Arena *arena;
@@ -41,9 +42,10 @@ TEST_F(Arena256, PushToMuchTooClose){
     ASSERT_TRUE(Arena_GetError(arena) == ARENA_BAD_ALLOC);
 }
 
-TEST_F(Arena256, GetPos){
-    Arena_push(arena, 16*sizeof(char), alignof(char));
-    ASSERT_TRUE(Arena_allocated(arena) == 16);
+TEST_F(Arena256, LinearAllocation){
+    char *ref = (char *)Arena_push(arena, 16*sizeof(char), alignof(char));
+    char *ptr = (char *)Arena_push(arena, 16*sizeof(char), alignof(char));
+    ASSERT_TRUE((ptr-ref) == 16);
 }
 
 TEST_F(Arena256, Alignment64){
@@ -90,7 +92,8 @@ TEST_F(ArenaDynamic4, DynamicAllocateMultiple){
 
 TEST_F(ArenaDynamic4, AllocateMoreThanNormal){
     char *ptr  = (char *)Arena_push(arena, 9, 1);
-    ASSERT_TRUE (Arena_allocated(arena) <= Arena_capacity(arena));
+    struct mem_register reg = MemSpy_LastestAllocation();
+    ASSERT_TRUE(reg.amount == (ptr-(char*)reg.ptr)+9+4);
 }
 
 

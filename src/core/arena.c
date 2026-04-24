@@ -1,3 +1,8 @@
+/*
+ * This file defines a simple scratch arena which allocated linearly
+ * Scratch means it allocated and never deallocates execpt when they arena
+ * is destroyied.
+ */
 #include "core/arena.h"
 #include "core/mem.h"
 #include <SDL3/SDL_gamepad.h>
@@ -20,13 +25,13 @@ is_power_of_two (size_t align)
 struct block {
 	struct block *next;
 	size_t offset;
+	size_t capacity;
 	char *mem;
 };
 
 struct _Arena {
 	struct block *block;
-	size_t capacity;
-	size_t allocated;
+	size_t base;
 	enum Arena_error errno;
 	enum Arena_type type;
 };
@@ -36,19 +41,19 @@ struct AlignedMem {
 	size_t offset;
 };
 
-static size_t
+static void
 allocate_block (T *arena, size_t extra)
 {
 	struct block *new;
-	size_t block_capacity = arena->capacity + extra;
+	size_t block_capacity = arena->base + extra;
 	new = (struct block *)ALLOC (sizeof (struct block) + block_capacity);
 	*new = (struct block){
 		.offset = 0,
+		.capacity = block_capacity,
 		.mem = (char *)(new + 1),
 		.next = arena->block,
 	};
 	arena->block = new;
-	return block_capacity;
 }
 
 T *
@@ -63,8 +68,7 @@ Arena_create (size_t reserve, enum Arena_type type)
 
 	*arena = (T){
 		.block = NULL,
-		.capacity = reserve,
-		.allocated = 0,
+		.base = reserve,
 		.errno = ARENA_OK,
 		.type = type,
 	};
@@ -119,20 +123,20 @@ Arena_push (T *arena, size_t nbytes, size_t align)
 
 	aligned = align_by_block (arena->block, align);
 
-	if (!is_within_capacity (nbytes + aligned.offset, arena->capacity)) {
+	if (!is_within_capacity (nbytes + aligned.offset,
+				 arena->block->capacity)) {
 		switch (arena->type) {
 		case ARENA_STATIC:
 			arena->errno = ARENA_BAD_ALLOC;
 			return NULL;
 		case ARENA_DYNMAIC:
-			arena->capacity += allocate_block (arena, nbytes);
+			allocate_block (arena, nbytes);
 			aligned = align_by_block (arena->block, align);
 			break;
 		}
 	}
 	arena->errno = ARENA_OK;
 	arena->block->offset += aligned.offset + nbytes;
-	arena->allocated += aligned.offset + nbytes;
 	return (void *)aligned.ptr;
 }
 
@@ -140,16 +144,4 @@ enum Arena_error
 Arena_GetError (T *arena)
 {
 	return arena->errno;
-}
-
-size_t
-Arena_capacity (T *arena)
-{
-	return arena->capacity;
-}
-
-size_t
-Arena_allocated (T *arena)
-{
-	return arena->allocated;
 }
