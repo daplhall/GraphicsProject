@@ -4,6 +4,7 @@
  * is destroyied.
  */
 #include "core/arena.h"
+#include "alignment.h"
 #include "core/mem.h"
 #include <SDL3/SDL_gamepad.h>
 #include <assert.h>
@@ -41,6 +42,18 @@ struct AlignedMem {
 	size_t offset;
 };
 
+static struct AlignedMem
+align_by_block (struct block *block, size_t align)
+{
+	uintptr_t aligned_ptr
+	    = alignment_forward ((uintptr_t)block->mem + block->offset, align);
+
+	return (struct AlignedMem){
+		.ptr = (char *)aligned_ptr,
+		.offset = aligned_ptr - (uintptr_t)block->mem,
+	};
+}
+
 static void
 allocate_block (T *arena, size_t extra)
 {
@@ -61,19 +74,24 @@ Arena_create (size_t reserve, enum Arena_type type)
 {
 	T *arena;
 
-	arena = (T *)ALLOC (reserve + sizeof (T));
+	arena = (T *)ALLOC (reserve + sizeof (T) + sizeof (struct block));
 	if (arena == NULL) {
 		return arena;
 	}
 
 	*arena = (T){
-		.block = NULL,
+		.block = (struct block *)(arena + 1),
 		.base = reserve,
 		.errno = ARENA_OK,
 		.type = type,
 	};
 
-	allocate_block (arena, 0);
+	*arena->block = (struct block){
+		.offset = 0,
+		.capacity = reserve,
+		.mem = (char *)(arena->block + 1),
+		.next = NULL,
+	};
 
 	return arena;
 }
@@ -81,7 +99,7 @@ Arena_create (size_t reserve, enum Arena_type type)
 void
 Arena_release (T *arena)
 {
-	while (arena->block != NULL) {
+	while (arena->block->next != NULL) {
 		struct block *old = arena->block;
 		arena->block = old->next;
 		FREE (old);
@@ -93,24 +111,6 @@ static bool
 is_within_capacity (size_t offset, size_t capacity)
 {
 	return offset <= capacity;
-}
-
-static uintptr_t
-alignment_forward (uintptr_t ptr_to_align, size_t align)
-{
-	return (ptr_to_align + align - 1) & ~(align - 1);
-}
-
-static struct AlignedMem
-align_by_block (struct block *block, size_t align)
-{
-	uintptr_t aligned_ptr
-	    = alignment_forward ((uintptr_t)block->mem + block->offset, align);
-
-	return (struct AlignedMem){
-		.ptr = (char *)aligned_ptr,
-		.offset = aligned_ptr - (uintptr_t)block->mem,
-	};
 }
 
 void *
