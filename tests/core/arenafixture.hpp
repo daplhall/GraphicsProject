@@ -16,6 +16,20 @@ class Arena256 : public ::testing::Test{
             Arena_release(arena);
         }
 };
+
+class ArenaDynamic4: public ::testing::Test  {
+    public:
+        Arena *arena;
+    protected:
+         void SetUp(){
+            arena = Arena_create(4, ARENA_DYNMAIC);
+         }
+        
+        void TearDown(){
+            Arena_release(arena);
+        }
+        
+};
     
 
 

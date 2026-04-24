@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-TEST(SortingFixtureInt, BubbleSort)
+TEST(SDL, Experiement)
 {
-    FAIL();
+    GTEST_SKIP() << "Just an experimental test";
 }
 

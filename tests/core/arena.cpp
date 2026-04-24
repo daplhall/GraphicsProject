@@ -1,6 +1,6 @@
+#include "core/arena.h"
 #include <cstdlib>
 #include <gtest/gtest.h>
-#include <core/arena.h>
 #include "arenafixture.hpp"
 
 TEST(Arena, Create){
@@ -43,7 +43,7 @@ TEST_F(Arena256, PushToMuchTooClose){
 
 TEST_F(Arena256, GetPos){
     Arena_push(arena, 16*sizeof(char), alignof(char));
-    ASSERT_TRUE(Arena_occupied(arena) == 16);
+    ASSERT_TRUE(Arena_allocated(arena) == 16);
 }
 
 TEST_F(Arena256, Alignment64){
@@ -71,3 +71,26 @@ TEST_F(Arena256, MultiplePush){
     char *q = (char *)Arena_push(arena, sizeof(char), 4);
     ASSERT_TRUE(q-p == 16);
 }
+
+TEST_F(ArenaDynamic4, DynamicAllocate){
+    Arena_push(arena, 4, 1);
+    char *p = (char *)Arena_push(arena, 4, 1);
+    ASSERT_TRUE(p != NULL);
+    ASSERT_TRUE(Arena_GetError(arena) == ARENA_OK);
+}
+
+TEST_F(ArenaDynamic4, DynamicAllocateMultiple){
+    Arena_push(arena, 4, 1);
+    for (int i = 0; i < 4; ++i){
+        char *p = (char *)Arena_push(arena, 4, 1);
+        ASSERT_TRUE(p != NULL);
+    }
+    ASSERT_TRUE(Arena_GetError(arena) == ARENA_OK);
+}
+
+TEST_F(ArenaDynamic4, AllocateMoreThanNormal){
+    char *ptr  = (char *)Arena_push(arena, 9, 1);
+    ASSERT_TRUE (Arena_allocated(arena) <= Arena_capacity(arena));
+}
+
+

@@ -1,0 +1,25 @@
+@startuml ArenaUsage
+actor john
+participant Arena
+participant Mem
+participant Block
+
+john -> Arena: Arena_create
+activate Arena
+
+Arena -> Mem: 
+
+Mem --> Arena : returns memory
+
+alt ALLOC returns null    
+    Arena -> john: Returns Null
+end alt
+
+Arena -> Block : Allocate_block
+activate Block
+Block -> Mem : Alloc
+Mem --> Block: Returns Memory
+Block --> Arena
+
+Arena -> john: Returns Arena
+@enduml
