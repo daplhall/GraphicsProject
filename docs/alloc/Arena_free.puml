@@ -1,0 +1,27 @@
+@startuml ArenaUsage
+actor john
+participant Arena
+participant Mem
+participant Block
+
+activate Arena
+activate Block
+john -> Arena: Arena_release
+
+Arena->Block
+Block -> Mem
+loop over each linked block
+    Mem -> Mem: FREE
+end loop
+Mem --> Block
+Block -> Arena
+destroy Block
+Arena -> Mem
+Mem -> Mem: FREE
+Mem --> Arena
+Arena --> john
+destroy Arena
+
+
+
+@enduml

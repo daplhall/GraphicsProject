@@ -1,5 +1,6 @@
 #include "core/arena.h"
 #include "core/mem.h"
+#include <SDL3/SDL_gamepad.h>
 #include <assert.h>
 #include <complex.h>
 #include <stdbool.h>
@@ -7,6 +8,14 @@
 
 #define T Arena
 #define ALIGNMENT
+
+#ifndef NDEBUG
+static bool
+is_power_of_two (size_t align)
+{
+	return !(align & (align - 1));
+}
+#endif
 
 struct block {
 	struct block *next;
@@ -17,6 +26,7 @@ struct block {
 struct _Arena {
 	struct block *block;
 	size_t capacity;
+	size_t allocated;
 	enum Arena_error errno;
 	enum Arena_type type;
 };
@@ -25,26 +35,20 @@ struct AlignedMem {
 	void *ptr;
 	size_t offset;
 };
-#ifndef NDEBUG
-static bool
-is_power_of_two (size_t align)
-{
-	return !(align & (align - 1));
-}
-#endif
 
-static void
-allocate_block (T *arena, size_t bonus)
+static size_t
+allocate_block (T *arena, size_t extra)
 {
 	struct block *new;
-	new = (struct block *)ALLOC (sizeof (struct block) + arena->capacity
-				     + bonus);
+	size_t block_capacity = arena->capacity + extra;
+	new = (struct block *)ALLOC (sizeof (struct block) + block_capacity);
 	*new = (struct block){
 		.offset = 0,
 		.mem = (char *)(new + 1),
 		.next = arena->block,
 	};
 	arena->block = new;
+	return block_capacity;
 }
 
 T *
@@ -60,6 +64,7 @@ Arena_create (size_t reserve, enum Arena_type type)
 	*arena = (T){
 		.block = NULL,
 		.capacity = reserve,
+		.allocated = 0,
 		.errno = ARENA_OK,
 		.type = type,
 	};
@@ -120,24 +125,15 @@ Arena_push (T *arena, size_t nbytes, size_t align)
 			arena->errno = ARENA_BAD_ALLOC;
 			return NULL;
 		case ARENA_DYNMAIC:
-			allocate_block (arena, nbytes);
+			arena->capacity += allocate_block (arena, nbytes);
 			aligned = align_by_block (arena->block, align);
 			break;
 		}
 	}
 	arena->errno = ARENA_OK;
 	arena->block->offset += aligned.offset + nbytes;
+	arena->allocated += aligned.offset + nbytes;
 	return (void *)aligned.ptr;
-}
-
-void
-Arena_pop (T *arena, size_t nbytes)
-{
-	if (nbytes > arena->block->offset) {
-		arena->block->offset = 0;
-	} else {
-		arena->block->offset -= nbytes;
-	}
 }
 
 enum Arena_error
@@ -155,5 +151,5 @@ Arena_capacity (T *arena)
 size_t
 Arena_allocated (T *arena)
 {
-	return arena->block->offset;
+	return arena->allocated;
 }

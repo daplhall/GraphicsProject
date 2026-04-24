@@ -1,0 +1,33 @@
+@startuml Arena_push
+actor John
+participant Arena
+participant Block
+participant Mem
+
+activate Arena
+activate Block
+John -> Arena : Arena_push
+Arena -> Block : push
+alt #lightblue if enough capacity left 
+    Block -> Block: Allocate
+    Block --> Arena
+else #pink else
+    alt If Dynamic
+        alt if new block exists
+            Block -> Block: Move head forward
+            Block -> Block: Allocate on block
+            Block --> Arena
+        else
+            Block -> Mem: ALLOC (Reserve + nbytes) Block
+            Mem --> Block : returns new Block
+            Block -> Block : pushes block unto end of current
+            Block -> Block : Set Block head equal to new block
+            Block --> Arena
+        else
+        end
+    else
+        Block --> Arena: Send error
+    end
+end
+Arena -> John
+@enduml

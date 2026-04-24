@@ -7,7 +7,7 @@ extern "C" {
 #include <core/arena.h>
     
 size_t ArenaSpy_GetBlockSize ();
-    
+size_t ArenaSpy_GetCurrentBlockCapacity (Arena *arena);
 #ifdef __cplusplus
 }
 #endif 
