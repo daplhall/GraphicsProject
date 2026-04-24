@@ -10,13 +10,13 @@
 
 struct block {
 	struct block *next;
-	size_t capacity;
 	size_t offset;
 	char *mem;
 };
 
 struct _Arena {
 	struct block *block;
+	size_t capacity;
 	enum Arena_error errno;
 	enum Arena_type type;
 };
@@ -25,21 +25,21 @@ struct AlignedMem {
 	void *ptr;
 	size_t offset;
 };
-
+#ifndef NDEBUG
 static bool
 is_power_of_two (size_t align)
 {
 	return !(align & (align - 1));
 }
+#endif
 
 static void
-allocate_block (T *arena)
+allocate_block (T *arena, size_t bonus)
 {
 	struct block *new;
-	new = (struct block *)ALLOC (sizeof (struct block)
-				     + arena->block->capacity);
+	new = (struct block *)ALLOC (sizeof (struct block) + arena->capacity
+				     + bonus);
 	*new = (struct block){
-		.capacity = arena->block->capacity,
 		.offset = 0,
 		.mem = (char *)(new + 1),
 		.next = arena->block,
@@ -48,29 +48,23 @@ allocate_block (T *arena)
 }
 
 T *
-Arena_create (size_t capacity, enum Arena_type type)
+Arena_create (size_t reserve, enum Arena_type type)
 {
 	T *arena;
-	struct block *block;
 
-	arena = (T *)ALLOC (capacity + sizeof (T));
+	arena = (T *)ALLOC (reserve + sizeof (T));
 	if (arena == NULL) {
 		return arena;
 	}
 
-	block = (struct block *)ALLOC (capacity + sizeof (struct block));
-	*block = (struct block){
-		.next = NULL,
-		.mem = (char *)(block + 1),
-		.capacity = capacity,
-		.offset = 0,
-	};
-
 	*arena = (T){
-		.block = block,
+		.block = NULL,
+		.capacity = reserve,
 		.errno = ARENA_OK,
 		.type = type,
 	};
+
+	allocate_block (arena, 0);
 
 	return arena;
 }
@@ -120,14 +114,13 @@ Arena_push (T *arena, size_t nbytes, size_t align)
 
 	aligned = align_by_block (arena->block, align);
 
-	if (!is_within_capacity (nbytes + aligned.offset,
-				 arena->block->capacity)) {
+	if (!is_within_capacity (nbytes + aligned.offset, arena->capacity)) {
 		switch (arena->type) {
 		case ARENA_STATIC:
 			arena->errno = ARENA_BAD_ALLOC;
 			return NULL;
 		case ARENA_DYNMAIC:
-			allocate_block (arena);
+			allocate_block (arena, nbytes);
 			aligned = align_by_block (arena->block, align);
 			break;
 		}
@@ -137,6 +130,16 @@ Arena_push (T *arena, size_t nbytes, size_t align)
 	return (void *)aligned.ptr;
 }
 
+void
+Arena_pop (T *arena, size_t nbytes)
+{
+	if (nbytes > arena->block->offset) {
+		arena->block->offset = 0;
+	} else {
+		arena->block->offset -= nbytes;
+	}
+}
+
 enum Arena_error
 Arena_GetError (T *arena)
 {
@@ -144,7 +147,13 @@ Arena_GetError (T *arena)
 }
 
 size_t
-Arena_occupied (T *arena)
+Arena_capacity (T *arena)
+{
+	return arena->capacity;
+}
+
+size_t
+Arena_allocated (T *arena)
 {
 	return arena->block->offset;
 }

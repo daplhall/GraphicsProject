@@ -1,7 +1,9 @@
+#include "core/arena.h"
 #include <cstdlib>
 #include <gtest/gtest.h>
-#include <core/arena.h>
+#include "arenaspy.h"
 #include "arenafixture.hpp"
+#include "memspy.h"
 
 TEST(Arena, Create){
     Arena *arena;
@@ -43,7 +45,7 @@ TEST_F(Arena256, PushToMuchTooClose){
 
 TEST_F(Arena256, GetPos){
     Arena_push(arena, 16*sizeof(char), alignof(char));
-    ASSERT_TRUE(Arena_occupied(arena) == 16);
+    ASSERT_TRUE(Arena_allocated(arena) == 16);
 }
 
 TEST_F(Arena256, Alignment64){
@@ -72,6 +74,20 @@ TEST_F(Arena256, MultiplePush){
     ASSERT_TRUE(q-p == 16);
 }
 
+TEST_F(Arena256, Pop64){
+    ASSERT_TRUE(Arena_allocated(arena) == 0);
+    Arena_push(arena, 64, 1);
+    ASSERT_TRUE(Arena_allocated(arena) == 64);
+    Arena_pop(arena, 64);
+    ASSERT_TRUE(Arena_allocated(arena) == 0);
+}
+
+TEST_F(Arena256, PopMoreThanIndex){
+    ASSERT_TRUE(Arena_allocated(arena) == 0);
+    Arena_pop(arena, 64);
+    ASSERT_TRUE(Arena_allocated(arena) == 0);
+}
+
 TEST_F(ArenaDynamic4, DynamicAllocate){
     Arena_push(arena, 4, 1);
     char *p = (char *)Arena_push(arena, 4, 1);
@@ -87,3 +103,12 @@ TEST_F(ArenaDynamic4, DynamicAllocateMultiple){
     }
     ASSERT_TRUE(Arena_GetError(arena) == ARENA_OK);
 }
+
+TEST_F(ArenaDynamic4, AllocateMoreThanNormal){
+    /* If we allocate more than capcity atm we corrupt memory!*/
+    char *ptr  = (char *)Arena_push(arena, 9, 1);
+    size_t capcity = Arena_capacity(arena);
+    size_t used = Arena_allocated(arena);
+    ASSERT_TRUE (used <= capcity);
+}
+
