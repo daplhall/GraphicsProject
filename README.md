@@ -21,6 +21,7 @@ This project is a redoing and futhere implementation of a simple terminal based 
 Third party libraries are downloaded and used with CMake
 1. [SDL3](https://github.com/libsdl-org/SDL)
 2. [Googletest](https://github.com/google/googletest)
+3. [glfw](https://www.glfw.org/) (Alternative for SDL3 that needs to be supported)
 
 ### Requirements
 1. CMake
@@ -45,3 +46,6 @@ This will install the targets in a ./install folder at the root of that external
 We will target this with our CMake files 
 
 Benefits, this allows the project to be self contained and we avoid having to build the libraries everytime we clean our own objects.
+
+# Making stuff small
+https://www.muppetlabs.com/~breadbox/software/tiny/teensy.html
