@@ -12,6 +12,7 @@ target_include_directories(core-tests
 
 add_executable(arena-tests
     core/arena.cpp
+    core/pool.cpp
 )
 target_link_libraries(arena-tests
     GTest::gtest_main

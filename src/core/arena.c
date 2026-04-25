@@ -25,14 +25,13 @@ is_power_of_two (size_t align)
 
 struct block {
 	struct block *next;
+	char *mem;
 	size_t offset;
 	size_t capacity;
-	char *mem;
 };
 
 struct _Arena {
 	struct block *block;
-	size_t base;
 	enum Arena_error errno;
 	enum Arena_type type;
 };
@@ -58,7 +57,7 @@ static void
 allocate_block (T *arena, size_t extra)
 {
 	struct block *new;
-	size_t block_capacity = arena->base + extra;
+	size_t block_capacity = arena->block->capacity + extra;
 	new = (struct block *)ALLOC (sizeof (struct block) + block_capacity);
 	*new = (struct block){
 		.offset = 0,
@@ -73,6 +72,7 @@ T *
 Arena_create (size_t reserve, enum Arena_type type)
 {
 	T *arena;
+	assert ((alignof (T) % alignof (struct block)) == 0);
 
 	arena = (T *)ALLOC (reserve + sizeof (T) + sizeof (struct block));
 	if (arena == NULL) {
@@ -81,7 +81,6 @@ Arena_create (size_t reserve, enum Arena_type type)
 
 	*arena = (T){
 		.block = (struct block *)(arena + 1),
-		.base = reserve,
 		.errno = ARENA_OK,
 		.type = type,
 	};
@@ -144,4 +143,12 @@ enum Arena_error
 Arena_GetError (T *arena)
 {
 	return arena->errno;
+}
+
+#include <stdio.h>
+size_t
+Arena_sizeof (void)
+{
+	printf ("%lld\n", (long long)sizeof (struct block));
+	return sizeof (Arena);
 }

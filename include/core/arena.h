@@ -29,8 +29,7 @@ void * Arena_push(T* arena, size_t nbytes, size_t alignment);
 void Arena_pop(T* arena, size_t nbytes);
 void Arena_release(T *arena);
 enum Arena_error Arena_GetError(T *arena);
-size_t Arena_capacity (T *arena);
-size_t Arena_allocated (T *arena);
+size_t Arena_sizeof (void);
     
 #undef T
 #ifdef __cplusplus
