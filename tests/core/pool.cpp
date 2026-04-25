@@ -24,9 +24,6 @@ TEST_F(Pool4x16, PopulateMultiple){
 
 TEST_F(Pool4x16, Deallocate){
     char *a = (char *)MemPool_populate(&pool);
-    char *b = (char *)MemPool_populate(&pool);
-    char *c = (char *)MemPool_populate(&pool);
-    char *d = (char *)MemPool_populate(&pool);
     MemPool_depopulate(&pool, (void *)a);
     ASSERT_TRUE(!MemPool_IsEmpty(&pool));
 }

@@ -20,5 +20,20 @@ class Pool4x16 : public ::testing::Test{
         }
 };
 
+class Pool1x16 : public ::testing::Test{
+    public:
+        Arena *arena;
+        MemPool pool;
+    protected:
+        void SetUp(){
+            arena = Arena_create(16, ARENA_STATIC);
+            pool = MemPool_create(arena ,1 , 16);
+        }
+        
+        void TearDown(){
+            Arena_release(arena);
+        }
+};
+
 
 #endif // GUARD_TESTMEMFIXTURES

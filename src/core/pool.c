@@ -34,11 +34,11 @@ MemPool_create (Arena *arena, size_t n, size_t size)
 {
 	assert (size >= sizeof (T) && "Chunk size is too small");
 
-	T *pool;
+	char *pool;
 	pool = Arena_push (arena, n * size, alignof (T));
 	if (pool == NULL)
 		return NULL;
-	return partition ((char *)pool, n, size);
+	return partition (pool, n, size);
 }
 
 void *
