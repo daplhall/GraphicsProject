@@ -145,10 +145,8 @@ Arena_GetError (T *arena)
 	return arena->errno;
 }
 
-#include <stdio.h>
 size_t
 Arena_sizeof (void)
 {
-	printf ("%lld\n", (long long)sizeof (struct block));
 	return sizeof (Arena);
 }

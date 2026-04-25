@@ -5,14 +5,14 @@
 #include "core/arena.h"
 #include "core/pool.h"
 
-class Pool16Arena16Capacity : public ::testing::Test{
+class Pool4x16 : public ::testing::Test{
     public:
         Arena *arena;
-        MemPool *pool;
+        MemPool pool;
     protected:
         void SetUp(){
-            arena = Arena_create(16*Arena_sizeof()+64, ARENA_STATIC);
-            pool = MemPool_create(arena ,16 , Arena_sizeof() + 4);
+            arena = Arena_create(64, ARENA_STATIC);
+            pool = MemPool_create(arena ,4 , 16);
         }
         
         void TearDown(){
