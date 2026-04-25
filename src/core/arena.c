@@ -4,6 +4,7 @@
  * is destroyied.
  */
 #include "core/arena.h"
+#include "alignment.h"
 #include "core/mem.h"
 #include <SDL3/SDL_gamepad.h>
 #include <assert.h>
@@ -24,14 +25,13 @@ is_power_of_two (size_t align)
 
 struct block {
 	struct block *next;
+	char *mem;
 	size_t offset;
 	size_t capacity;
-	char *mem;
 };
 
 struct _Arena {
 	struct block *block;
-	size_t base;
 	enum Arena_error errno;
 	enum Arena_type type;
 };
@@ -41,11 +41,23 @@ struct AlignedMem {
 	size_t offset;
 };
 
+static struct AlignedMem
+align_by_block (struct block *block, size_t align)
+{
+	uintptr_t aligned_ptr
+	    = alignment_forward ((uintptr_t)block->mem + block->offset, align);
+
+	return (struct AlignedMem){
+		.ptr = (char *)aligned_ptr,
+		.offset = aligned_ptr - (uintptr_t)block->mem,
+	};
+}
+
 static void
 allocate_block (T *arena, size_t extra)
 {
 	struct block *new;
-	size_t block_capacity = arena->base + extra;
+	size_t block_capacity = arena->block->capacity + extra;
 	new = (struct block *)ALLOC (sizeof (struct block) + block_capacity);
 	*new = (struct block){
 		.offset = 0,
@@ -60,20 +72,25 @@ T *
 Arena_create (size_t reserve, enum Arena_type type)
 {
 	T *arena;
+	assert ((alignof (T) % alignof (struct block)) == 0);
 
-	arena = (T *)ALLOC (reserve + sizeof (T));
+	arena = (T *)ALLOC (reserve + sizeof (T) + sizeof (struct block));
 	if (arena == NULL) {
 		return arena;
 	}
 
 	*arena = (T){
-		.block = NULL,
-		.base = reserve,
+		.block = (struct block *)(arena + 1),
 		.errno = ARENA_OK,
 		.type = type,
 	};
 
-	allocate_block (arena, 0);
+	*arena->block = (struct block){
+		.offset = 0,
+		.capacity = reserve,
+		.mem = (char *)(arena->block + 1),
+		.next = NULL,
+	};
 
 	return arena;
 }
@@ -81,7 +98,7 @@ Arena_create (size_t reserve, enum Arena_type type)
 void
 Arena_release (T *arena)
 {
-	while (arena->block != NULL) {
+	while (arena->block->next != NULL) {
 		struct block *old = arena->block;
 		arena->block = old->next;
 		FREE (old);
@@ -93,24 +110,6 @@ static bool
 is_within_capacity (size_t offset, size_t capacity)
 {
 	return offset <= capacity;
-}
-
-static uintptr_t
-alignment_forward (uintptr_t ptr_to_align, size_t align)
-{
-	return (ptr_to_align + align - 1) & ~(align - 1);
-}
-
-static struct AlignedMem
-align_by_block (struct block *block, size_t align)
-{
-	uintptr_t aligned_ptr
-	    = alignment_forward ((uintptr_t)block->mem + block->offset, align);
-
-	return (struct AlignedMem){
-		.ptr = (char *)aligned_ptr,
-		.offset = aligned_ptr - (uintptr_t)block->mem,
-	};
 }
 
 void *
@@ -144,4 +143,10 @@ enum Arena_error
 Arena_GetError (T *arena)
 {
 	return arena->errno;
+}
+
+size_t
+Arena_sizeof (void)
+{
+	return sizeof (Arena);
 }

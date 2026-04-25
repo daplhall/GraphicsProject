@@ -1,6 +1,8 @@
 add_library(Core
     core/arena.c
+    core/pool.c
     core/mem.c
+    core/alignment.c
 )
 
 target_include_directories(Core
@@ -18,13 +20,4 @@ target_compile_options(Core
 target_link_options(Core
     PUBLIC
     ${RASTER_LCFLAGS}
-)
-
-add_executable(main
-    core/main.c
-)
-
-target_link_libraries(main
-    PRIVATE
-    Core
 )
