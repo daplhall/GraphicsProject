@@ -4,12 +4,12 @@
 extern "C" {
 #endif 
 #include <stdbool.h>
-#include "core/arena.h"
+#include "mem/arena.h"
 
 #define T MemPool
 typedef struct _MemPool *T;
 
-T MemPool_create (Arena *arena, size_t n, size_t size);
+T MemPool_create (Arena *arena, size_t size, size_t nbytes, size_t align);
 void *MemPool_populate (T *pool);
 void MemPool_depopulate(T *pool, void *ptr);
 size_t MemPool_sizeof (void);

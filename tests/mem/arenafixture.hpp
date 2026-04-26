@@ -2,7 +2,7 @@
 #define GUARD_MEMFIXTURE_H
 
 #include <gtest/gtest.h>
-#include "core/arena.h"
+#include "mem/arena.h"
 
 class Arena256 : public ::testing::Test{
     public:

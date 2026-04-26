@@ -1,4 +1,4 @@
-#include "core/mem.h"
+#include "mem/mem.h"
 #include <cassert>
 #include <gtest/gtest.h>
 #include "memfixture.hpp"

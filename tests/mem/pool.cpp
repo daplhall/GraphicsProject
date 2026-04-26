@@ -1,4 +1,4 @@
-#include "core/pool.h"
+#include "mem/pool.h"
 #include <gtest/gtest.h>
 #include "poolfixture.hpp"
 

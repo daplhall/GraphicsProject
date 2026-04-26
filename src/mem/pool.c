@@ -1,5 +1,5 @@
-#include "core/pool.h"
-#include "core/arena.h"
+#include "mem/pool.h"
+#include "mem/arena.h"
 #include <assert.h>
 #include <stdalign.h>
 #include <stdbool.h>
@@ -30,15 +30,16 @@ partition (char *mem, size_t n, size_t full_size)
 }
 
 T
-MemPool_create (Arena *arena, size_t n, size_t size)
+MemPool_create (Arena *arena, size_t size, size_t nbytes, size_t align)
 {
-	assert (size >= sizeof (T) && "Chunk size is too small");
+	assert (nbytes >= sizeof (T) && "Chunk size is too small");
 
+	size_t n = size / nbytes;
 	char *pool;
-	pool = Arena_push (arena, n * size, alignof (T));
+	pool = Arena_push (arena, n * nbytes, align);
 	if (pool == NULL)
 		return NULL;
-	return partition (pool, n, size);
+	return partition (pool, n, nbytes);
 }
 
 void *
@@ -72,10 +73,3 @@ MemPool_IsEmpty (T *pool)
 {
 	return *pool == EMPTYPOOL;
 }
-
-// Control to allocated N blocks directly to the free list, that we we
-// cna say we want N block to be next to eahcother void
-// PoolPartition_populate(size_t count) This could maybe pack the data
-// different ly ie |chunk1|chunk2|chunk3|mem1|mem2|mem3| rather than
-// |chunk1|mem1|chunk2|mem2|chunk3|mem3| Then we essentially have 2
-// cache lines one of chunk and one of mem This needs to be tested

@@ -3,9 +3,9 @@
  * Scratch means it allocated and never deallocates execpt when they arena
  * is destroyied.
  */
-#include "core/arena.h"
+#include "mem/arena.h"
 #include "alignment.h"
-#include "core/mem.h"
+#include "mem/mem.h"
 #include <SDL3/SDL_gamepad.h>
 #include <assert.h>
 #include <complex.h>
