@@ -30,15 +30,16 @@ partition (char *mem, size_t n, size_t full_size)
 }
 
 T
-MemPool_create (Arena *arena, size_t n, size_t size)
+MemPool_create (Arena *arena, size_t size, size_t nbytes, size_t align)
 {
-	assert (size >= sizeof (T) && "Chunk size is too small");
+	assert (nbytes >= sizeof (T) && "Chunk size is too small");
 
+	size_t n = size / nbytes;
 	char *pool;
-	pool = Arena_push (arena, n * size, alignof (T));
+	pool = Arena_push (arena, n * nbytes, align);
 	if (pool == NULL)
 		return NULL;
-	return partition (pool, n, size);
+	return partition (pool, n, nbytes);
 }
 
 void *

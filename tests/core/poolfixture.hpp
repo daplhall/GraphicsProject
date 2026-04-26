@@ -12,7 +12,7 @@ class Pool4x16 : public ::testing::Test{
     protected:
         void SetUp(){
             arena = Arena_create(64, ARENA_STATIC);
-            pool = MemPool_create(arena ,4 , 16);
+            pool = MemPool_create(arena ,64 , 16, 1);
         }
         
         void TearDown(){
@@ -27,7 +27,7 @@ class Pool1x16 : public ::testing::Test{
     protected:
         void SetUp(){
             arena = Arena_create(16, ARENA_STATIC);
-            pool = MemPool_create(arena ,1 , 16);
+            pool = MemPool_create(arena ,16 , 16, 1);
         }
         
         void TearDown(){
