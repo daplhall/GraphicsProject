@@ -2,8 +2,8 @@
 #ifndef GUARD_TESTPOOLFIXTURE_HPP
 #define GUARD_TESTPOOLFIXTURE_HPP
 #include <gtest/gtest.h>
-#include "core/arena.h"
-#include "core/pool.h"
+#include "mem/arena.h"
+#include "mem/pool.h"
 
 class Pool4x16 : public ::testing::Test{
     public:

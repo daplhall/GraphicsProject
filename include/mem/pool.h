@@ -4,7 +4,7 @@
 extern "C" {
 #endif 
 #include <stdbool.h>
-#include "core/arena.h"
+#include "mem/arena.h"
 
 #define T MemPool
 typedef struct _MemPool *T;

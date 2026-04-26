@@ -4,7 +4,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif 
-#include <core/mem.h>
+#include <mem/mem.h>
     
 struct mem_register {
 	void *ptr;

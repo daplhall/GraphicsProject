@@ -1,12 +1,12 @@
 add_library(memspy
     OBJECT
-    core/memspy.c
+    mem/memspy.c
 )
 
 target_include_directories(memspy
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/spies/core
+    ${PROJECT_SOURCE_DIR}/spies/mem
     PRIVATE
-    ${PROJECT_SOURCE_DIR}/src/core
+    ${PROJECT_SOURCE_DIR}/src/mem
 )

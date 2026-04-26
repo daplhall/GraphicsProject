@@ -1,35 +1,35 @@
-add_executable(core-tests
-    core/mem.cpp
+add_executable(mem-tests
+    mem/mem.cpp
 )
-target_link_libraries(core-tests
+target_link_libraries(mem-tests
     GTest::gtest_main
-    Core
+    Memory
 )
-target_include_directories(core-tests
+target_include_directories(mem-tests
     PUBLIC
     .
 )
 
 add_executable(arena-tests
-    core/arena.cpp
-    core/pool.cpp
+    mem/arena.cpp
+    mem/pool.cpp
 )
 target_link_libraries(arena-tests
     GTest::gtest_main
     memspy
-    Core
+    Memory
 )
 target_include_directories(arena-tests
     PUBLIC
-    ./core
+    ./mem
 )
 
-target_compile_options(Core
+target_compile_options(Memory
     PRIVATE
     ${RASTER_SANITIZER_FLAGS}
 )
 
-target_link_options(Core
+target_link_options(Memory
     PUBLIC
     ${RASTER_LCFLAGS}
 )
@@ -43,6 +43,6 @@ target_link_libraries(SDL-tests SDL3::SDL3)
 target_link_libraries(SDL-tests GTest::gtest_main)
 
 include(GoogleTest)
-gtest_discover_tests(core-tests)
+gtest_discover_tests(mem-tests)
 gtest_discover_tests(arena-tests)
 gtest_discover_tests(SDL-tests)

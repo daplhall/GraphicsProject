@@ -1,23 +1,23 @@
-add_library(Core
-    core/arena.c
-    core/pool.c
-    core/mem.c
-    core/alignment.c
+add_library(Memory
+    mem/arena.c
+    mem/pool.c
+    mem/mem.c
+    mem/alignment.c
 )
 
-target_include_directories(Core
+target_include_directories(Memory
     PRIVATE
-    ./core
+    ./mem
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include
 )
 
-target_compile_options(Core
+target_compile_options(Memory
     PRIVATE
     ${RASTER_CFLAGS}
 )
 
-target_link_options(Core
+target_link_options(Memory
     PUBLIC
     ${RASTER_LCFLAGS}
 )

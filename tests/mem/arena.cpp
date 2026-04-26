@@ -1,4 +1,4 @@
-#include "core/arena.h"
+#include "mem/arena.h"
 #include <cstdlib>
 #include <gtest/gtest.h>
 #include "arenafixture.hpp"

@@ -1,7 +1,7 @@
 #ifndef GUARD_TESTMEMFIXTURES_HPP
 #define GUARD_TESTMEMFIXTURES_HPP
 #include <gtest/gtest.h>
-#include "core/mem.h"
+#include "mem/mem.h"
 
 class Alloc : public ::testing::Test{
     public:
