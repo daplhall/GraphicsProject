@@ -9,8 +9,12 @@ extern "C" {
 #include <stdalign.h>
 
 #define T Arena
+#define B ArenaAllocator
+#define P ArenaPartition
 
 typedef struct _Arena T;
+typedef struct _Arena B;
+typedef struct _Arena P;
 
 enum Arena_type {
     ARENA_STATIC,
@@ -24,13 +28,20 @@ enum Arena_error{
 };
 
 
-T * Arena_create(size_t reserve, enum Arena_type type);
 void * Arena_push(T* arena, size_t nbytes, size_t alignment);
 void Arena_pop(T* arena, size_t nbytes);
-void Arena_release(T *arena);
+void Arena_clear(T* arena);
 enum Arena_error Arena_GetError(T *arena);
-size_t Arena_sizeof (void);
     
+B * ArenaAllocator_create(size_t reserve, enum Arena_type type);
+void ArenaAllocator_release(B *arena);
+size_t ArenaAllocator_sizeof (void);
+
+P * Arena_partition(T* arena, size_t reserve);
+size_t ArenaPartition_sizeof (void);
+
+
+
 #undef T
 #ifdef __cplusplus
 }

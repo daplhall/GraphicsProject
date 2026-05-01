@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <complex.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #define T Arena
@@ -68,17 +69,10 @@ allocate_block (T *arena, size_t extra)
 	arena->block = new;
 }
 
-T *
-Arena_create (size_t reserve, enum Arena_type type)
+static void
+init (void *ptr, size_t capacity, enum Arena_type type)
 {
-	T *arena;
-	assert ((alignof (T) % alignof (struct block)) == 0);
-
-	arena = (T *)ALLOC (reserve + sizeof (T) + sizeof (struct block));
-	if (arena == NULL) {
-		return arena;
-	}
-
+	T *arena = (T *)ptr;
 	*arena = (T){
 		.block = (struct block *)(arena + 1),
 		.errno = ARENA_OK,
@@ -87,10 +81,24 @@ Arena_create (size_t reserve, enum Arena_type type)
 
 	*arena->block = (struct block){
 		.offset = 0,
-		.capacity = reserve,
+		.capacity = capacity,
 		.mem = (char *)(arena->block + 1),
 		.next = NULL,
 	};
+}
+
+T *
+Arena_create (size_t reserve, enum Arena_type type)
+{
+	T *arena;
+	assert ((alignof (T) % alignof (struct block)) == 0);
+
+	arena = ALLOC (reserve + sizeof (T) + sizeof (struct block));
+	if (arena == NULL) {
+		return arena;
+	}
+
+	init (arena, reserve, type);
 
 	return arena;
 }
