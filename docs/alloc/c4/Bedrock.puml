@@ -1,0 +1,18 @@
+@startuml Bedrock
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+Component(pipeline, "Graphics Pipeline")
+Boundary(bedrock, "Bedrock"){
+    Boundary(lifetime, "Lifetime Managers"){
+        Component(arena, "Arena" ,"main lifetimes")
+        Component(partition, "Partition", "Sub lifetimes")
+    }
+    Boundary(behavior, "Arena behavior", "Adds behavior to arenas"){
+        Component(pool, "Pool")
+        Component(stack, "Stack")
+    }
+    Rel(behavior, lifetime, "")
+}
+
+Rel(pipeline, bedrock, "")
+@enduml

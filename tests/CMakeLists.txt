@@ -5,6 +5,7 @@ target_link_libraries(mem-tests
     GTest::gtest_main
     Memory
 )
+
 target_include_directories(mem-tests
     PUBLIC
     .

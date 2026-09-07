@@ -14,6 +14,7 @@
 #include <stdint.h>
 
 #define T Arena
+#define P ArenaTemp
 #define ALIGNMENT
 
 #ifndef NDEBUG
@@ -153,8 +154,29 @@ Arena_GetError (T *arena)
 	return arena->errno;
 }
 
-size_t
-Arena_sizeof (void)
+enum Arena_error
+Arena_setpos (T *arena, size_t pos)
 {
-	return sizeof (Arena);
+	if (pos > arena->block->capacity) {
+		arena->errno = ARENA_BAD_POSITION;
+		return ARENA_BAD_POSITION;
+	}
+	arena->block->offset = pos;
+	return ARENA_OK;
+}
+
+void
+Arena_clear (T *arena)
+{
+}
+
+P
+ArenaTemp_create (T *arena)
+{
+	return (P){ .arena = arena, .loc = arena->block->offset };
+}
+
+void
+ArenaTemp_release (P *temp_arena)
+{
 }

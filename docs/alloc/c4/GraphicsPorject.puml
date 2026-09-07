@@ -1,0 +1,30 @@
+@startuml GraphicsProject
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+Person(developer, "Developer", "Create of a computer simulation")
+System(usrProgram,"User Computer simulation", "")
+
+Component(bedrock, "Bedrock", "Base Module")
+Boundary(pipeline, "Graphics Pipeline", ""){
+    Component(geometry, "Geometry", "Handles Geometry and the like")
+    Component(rasterization, "Rasterization", "Drawing the actual image")
+    Component(pixelprocessing, "Pixelprocessing", "Shading and the like")
+    
+    Rel(geometry, rasterization, "")
+    Rel(rasterization, pixelprocessing, "")
+    Rel(pipeline, bedrock, "")
+}
+Component(windowFactory, "Window Factory", "Creates windows")
+Component(simgraphs, "Simulation Graphics", "")
+Component(sdl3, "SDL3", "Library")
+Component(glfw, "GLFW", "Library")
+
+
+Rel(developer, usrProgram, "develops")
+Rel(usrProgram, simgraphs, "")
+Rel(simgraphs, windowFactory, "")
+Rel(simgraphs, geometry, "")
+Rel(windowFactory, sdl3, "Possible dependency")
+Rel(windowFactory, glfw, "Possible dependency")
+
+@enduml

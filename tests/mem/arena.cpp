@@ -1,5 +1,6 @@
 #include "mem/arena.h"
 #include <cstdlib>
+#include <limits.h>
 #include <gtest/gtest.h>
 #include "arenafixture.hpp"
 #include "memspy.h"
@@ -96,4 +97,65 @@ TEST_F(ArenaDynamic4, AllocateMoreThanNormal){
     ASSERT_TRUE(reg.amount == (ptr-(char*)reg.ptr)+9+4);
 }
 
+TEST_F(Arena256, ScratchArena){
+    char *ptr;
+    ArenaTemp scratch = ArenaTemp_create(arena);
+    ptr = (char *)Arena_push(scratch.arena, 256, 1);
+    ptr = (char *)Arena_push(scratch.arena, 1, 1);
+    if (ptr == NULL){
+        ArenaTemp_release(&scratch);
+        ptr = (char *)Arena_push(arena, 256, 1);
+        ASSERT_TRUE(ptr != NULL);
+    } else {
+        FAIL();
+    }
+}
 
+TEST_F(Arena256, SetPos){
+    Arena_setpos(arena, 255);
+    char *ptr = (char *)Arena_push(arena, 2, 1);
+    ASSERT_TRUE(ptr == NULL);
+}
+
+TEST_F(Arena256, SetPosBack){
+    char *ptr;
+    Arena_push(arena, 255, 1);
+    ptr = (char *)Arena_push(arena, 2, 1);
+    ASSERT_TRUE(ptr == NULL);
+    Arena_setpos(arena, 0);
+    ptr = (char *)Arena_push(arena, 256, 1);
+    ASSERT_TRUE(ptr != NULL);
+}
+
+TEST_F(Arena256, SetPosNegative){
+    if (Arena_setpos(arena, -5) != ARENA_BAD_POSITION){
+        FAIL();
+    } else {
+        SUCCEED();
+    }
+}
+
+TEST_F(Arena256, SetPosToLarge){
+    if (Arena_setpos(arena, SIZE_MAX) != ARENA_BAD_POSITION){
+        FAIL();
+    } else {
+        SUCCEED();
+    }
+}
+
+/*
+TEST_F(Arena256, SetPosDynamic){
+    FAIL();
+}
+TEST_F(Arena256, SetPosDynamicToLarge){
+    FAIL();
+}
+
+TEST_F(Arena256, SetPosDynamicNegative){
+    FAIL();
+}
+
+TEST_F(Arena256, Clear){
+    FAIL();
+}
+*/

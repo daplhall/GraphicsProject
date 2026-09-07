@@ -1,0 +1,17 @@
+@startuml CI/CD
+!include <C4/C4_Container>
+!include <C4/C4_Component>
+Person(developer, "developer", "")
+System(gitea, "gitea", "Git reporsitory")
+System(jenkins, "Jenkins", "CI/CD")
+Container(agent, "Gitea agent")
+System(sonarcube, "Sonar Cube")
+
+
+Rel(developer, gitea, "Makes a pull request")
+Rel(gitea, agent , "Gives job to")
+Rel(agent, jenkins, "Requests pipeline execution")
+Rel(jenkins, gitea, "Returns results from pipeline")
+Rel(agent, sonarcube , "Gives job to")
+Rel(sonarcube, gitea, "Returns results of tests")
+@enduml
