@@ -72,5 +72,19 @@
             "name": "linux-relwithdeb",
             "configurePreset": "ci-linux-relwithdeb"
         }
+    ],
+    "testPresets": [
+        {
+            "name": "linux-release",
+            "configurePreset": "ci-linux-release"
+        },
+        {
+            "name": "linux-debug",
+            "configurePreset": "ci-linux-debug"
+        },
+        {
+            "name": "linux-relwithdeb",
+            "configurePreset": "ci-linux-relwithdeb"
+        }
     ]
 }

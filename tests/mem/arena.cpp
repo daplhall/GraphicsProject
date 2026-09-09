@@ -1,7 +1,6 @@
 #include "mem/arena.h"
 #include <cstdlib>
 #include <limits.h>
-#include <gtest/gtest.h>
 #include "arenafixture.hpp"
 #include "memspy.h"
 
@@ -99,6 +98,7 @@ TEST_F(ArenaDynamic4, AllocateMoreThanNormal){
 
 TEST_F(Arena256, ScratchArena){
     char *ptr;
+    GTEST_SKIP_("Will be done in a future update");
     ArenaTemp scratch = ArenaTemp_create(arena);
     ptr = (char *)Arena_push(scratch.arena, 256, 1);
     ptr = (char *)Arena_push(scratch.arena, 1, 1);

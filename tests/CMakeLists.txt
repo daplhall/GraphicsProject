@@ -35,6 +35,19 @@ target_link_options(Memory
     ${RASTER_LCFLAGS}
 )
 
+add_executable(collections-tests
+    collections/dictionary.cpp
+)
+
+target_link_libraries(collections-tests
+    PUBLIC
+    GTest::gtest_main
+    memspy
+    Memory
+    collections
+)
+
+
 add_executable(SDL-tests
     SDL/main.cpp
     SDL/test_1.cpp
@@ -47,3 +60,4 @@ include(GoogleTest)
 gtest_discover_tests(mem-tests)
 gtest_discover_tests(arena-tests)
 gtest_discover_tests(SDL-tests)
+gtest_discover_tests(collections-tests)

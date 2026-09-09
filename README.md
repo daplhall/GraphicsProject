@@ -35,6 +35,20 @@ cmake --presets <preset>
 cmake --build --preset <preset>
 ```
 
+
+# Tests
+Follow Build section
+```
+ctest --presets <preset>
+```
+
+# Listing presets
+```
+cmake --list-presets # for config presets
+cmake --build --list-presets # for build presets
+ctest --list-presets # for test presets
+```
+
 ## Externals
 Externals are all saved to the External folder, and then build indivudally with the following steps
 ```

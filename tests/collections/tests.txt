@@ -1,0 +1,8 @@
+1. We should succesfully on an arena
+2. Assign value
+3. Assign a bunch of random values - to get the distribtuion
+4. pop element 
+5. fetch value
+6. We try to assign over the allowed memory.
+7. Memory fails to allocate
+8. 
