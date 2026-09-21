@@ -72,7 +72,7 @@ Note: They are currently hinted, meaning that if you don't do the above but just
 [Making a program smaller](https://www.muppetlabs.com/~breadbox/software/tiny/teensy.html)
 
 # Dev Notes
-To List presets do:
+To List presets do for the various cmake stages
 ```
 cmake --list-presets # for config presets
 cmake --build --list-presets # for build presets
