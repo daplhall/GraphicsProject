@@ -5,6 +5,14 @@ It is also used to learn a lot of new design practices, and in general writing a
 
 It will likely also pivot into a computer simulation project before the graphics stuff.
 
+# Table of Contents
+1. [Goals](#Goals)
+2. [Getting started](#getting-started)
+3. [Development](#development)
+    - [Learning Resources](#learning-resources)
+    - [Script Ideas](ideas-for-helper-programs)
+
+
 # Goals
 1. To have a Software rasterizor that i can use to visualize my future physics projects.
 2. To learn about computer graphics.
@@ -26,6 +34,18 @@ Third party libraries are downloaded and used with CMake
 2. [Googletest](https://github.com/google/googletest)
 3. [glfw](https://www.glfw.org/) (Alternative for SDL3 that needs to be supported)
 
+## Externals
+The project assumes that **ATM** that external libraries are located in the `external` folder.
+The onces that where previouly listed can be build with cmake in the following way:
+```
+mkdir build && cd build
+cmake -DCMAKE_INSTALL_PREFIX:PATH=../.install .. 
+cmake --build . --target install
+```
+This will install the targets in a ./install folder at the root of that external projects directory. These are targeted in the `cmake/find*.cmake` files which adds them to the project. This allows the project to be isolated and allow the project to not be system dependent.
+
+Note: They are currently hinted, meaning that if you don't do the above but just install them in the system/env, then it should still find them.
+
 ## Building
 With presets defined one can build with
 ```
@@ -40,27 +60,11 @@ Follow Build section
 ctest --presets <preset>
 ```
 
-## Externals
-The project assumes that **ATM** that external libraries are located in the `external` folder.
-The onces that where previouly listed can be build with cmake in the following way:
-```
-mkdir build && cd build
-cmake -DCMAKE_INSTALL_PREFIX:PATH=../.install .. 
-cmake --build . --target install
-```
-This will install the targets in a ./install folder at the root of that external projects directory. These are targeted in the `cmake/find*.cmake` files which adds them to the project. This allows the project to be isolated and allow the project to not be system dependent.
-
-Note: They are currently hinted, meaning that if you don't do the above but just install them in the system/env, then it should still find them.
-
-
 # Development
-## Countinous Integration
-I have a home CI/CD setup, which can be found [here](https://github.com/daplhall/jenkins-playground-cicd)
+The repo is hosted [here](https://github.com/daplhall/GraphicsProject)
 
-- [ ] Running tests automatically
 
-## Code Quality
-- [ ] SonarCube
+I have a home CI/CD setup, which can be found [here](https://github.com/daplhall/jenkins-playground-cicd). Should have SonarCube community & CI/CD base env.
 
 ## Documentation
 - Plantuml (for C4)
@@ -70,7 +74,7 @@ I have a home CI/CD setup, which can be found [here](https://github.com/daplhall
 - [ ] By a PC with a GPU (not relevant until)
     - [ ] implement CI with GPU features
 
-## The resources used for this project
+## Learning Resources
 
 ### Books
 1. Foundations of Game Engine Development - Coulkd be interesting to see if i can use some technegues in the engine for computer simulations
@@ -127,3 +131,21 @@ cmake --list-presets # for config presets
 cmake --build --list-presets # for build presets
 ctest --list-presets # for test presets
 ```
+
+## Ideas for helper programs
+- As this program is modular, it could be fun if i could write a script that allows me to write `extract-lib . mem`
+    
+    Then i get the source code extracted out in correct structure
+
+    - Src
+    - Tests
+    - Mocks
+    - ...
+
+    and maybe even the CMakeFile for it
+    
+- Script that creates a module in source and its own `src` module, `test` folder and `include` header file.
+
+- Script as above but removes a module
+
+- Script as above that copies a module
