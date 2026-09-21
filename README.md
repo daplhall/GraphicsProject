@@ -6,12 +6,21 @@ It is also used to learn a lot of new design practices, and in general writing a
 It will likely also pivot into a computer simulation project before the graphics stuff.
 
 # Table of Contents
-1. [Goals](#goals)
-2. [Getting started](#getting-started)
-3. [Development](#development)
+1. [State of project](#state-of-project)
+2. [Goals](#goals)
+3. [Getting started](#getting-started)
+4. [Development](#development)
     - [Learning Resources](#learning-resources)
     - [Script Ideas](#ideas-for-helper-programs)
 
+# State of project
+currently i am building the framework/tools for the project:
+
+1. [x] Arena allocators - The base allocator for the entire project _(will be expaned as needed)_
+2. [ ] Config module - Config files and stuff
+3. [ ] Logging Module - Logging
+4. [ ] Python embedding - This could be a fun one _(Not sure, would be fun though)_
+5. [ ] CLI interface - Parser for easy creating CLI _(Not sure, but would be so much fun)_
 
 # Goals
 1. To have a Software rasterizor that i can use to visualize my future physics projects.
