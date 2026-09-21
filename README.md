@@ -1,5 +1,10 @@
 # The Graphics Project
-This project is a redoing and futhere implementation of a simple terminal based [rasterizer](https://github.com/daplhall/Terminal-Rastrorizer) that i wrote many years ago.
+The endgoal of this project is to redo and futhere implementation of a simple terminal based [rasterizer](https://github.com/daplhall/Terminal-Rastrorizer) that i wrote many years ago.
+
+It is also used to learn a lot of new design practices, and in general writing a larger C language project.
+
+It will likely also pivot into a computer simulation project before the graphics stuff.
+
 # Goals
 1. To have a Software rasterizor that i can use to visualize my future physics projects.
 2. To learn about computer graphics.
@@ -11,8 +16,9 @@ This project is a redoing and futhere implementation of a simple terminal based 
 This projects depends on various external dependecies.
 
 ## Requirements
+Currently the project need the following
 1. CMake
-2. GNU Compiler
+2. GNU Compiler (gcc)
 
 ### Third Party Libaries
 Third party libraries are downloaded and used with CMake
@@ -47,31 +53,74 @@ This will install the targets in a ./install folder at the root of that external
 Note: They are currently hinted, meaning that if you don't do the above but just install them in the system/env, then it should still find them.
 
 
+# Development
+## Countinous Integration
+I have a home CI/CD setup, which can be found [here](https://github.com/daplhall/jenkins-playground-cicd)
 
-# The resources used for this project
+- [ ] Running tests automatically
 
-## Books
-1. Foundations of Game Engine Development
-2. Real-time Rendering 4th edition
-3. Physically Based Rendering From Theory To Implementation 4th Edition
+## Code Quality
+- [ ] SonarCube
 
-## Tutorials
+## Documentation
+- Plantuml (for C4)
+- Sphinx? (HTML pages for APIs)
+
+### TODO
+- [ ] By a PC with a GPU (not relevant until)
+    - [ ] implement CI with GPU features
+
+## The resources used for this project
+
+### Books
+1. Foundations of Game Engine Development - Coulkd be interesting to see if i can use some technegues in the engine for computer simulations
+
+### Graphics stuff
+#### Books
+1. Real-time Rendering 4th edition
+2. Physically Based Rendering From Theory To Implementation 4th Edition
+
+#### Tutorials
+
 1. [SDL and Vulkan](https://github.com/AndreVallestero/sdl-vulkan-tutorial)
 2. [Github and Jenkins](https://stackoverflow.com/questions/70989970/how-to-block-the-ability-to-merge-the-feature-branch-into-the-main-branch-when-a)
 
-## Blog posts
-
-### Hash map
-
+### Hash maps
 1. [Writing a hash map](https://benhoyt.com/writings/hash-table-in-c/)
 2. [Technigues for hashmaps](https://sio.mataroa.blog/blog/hashmap-implementation-techniques-for-fun-profit/)
+3. [Wikipedia](https://en.wikipedia.org/wiki/Hash_table)
+4. [Wikipedia 2](https://en.wikipedia.org/wiki/Associative_array)
+
+### Arenas
+1. [Blog post about arenas](https://www.bytesbeneath.com/p/the-arena-custom-memory-allocators)
+2. [Blog](https://www.bytesbeneath.com/p/the-arena-custom-memory-allocators)
+3. [Ryans blog](https://www.bytesbeneath./p/the-arena-custom-memory-allocators)
+4. [A Good blog](https://www.williamfedele.com/blog/arena-allocators)
+5. [Blog from odin lead](https://www.gingerbill.org/series/memory-allocation-strategies/)
+6. [Ryans Talk](https://www.youtube.com/watch?v=TZ5a3gCCZYo)
+
+### Thinking in C
+1. [The Lost art of structure packing](http://www.catb.org/esr/structure-packing/)
+2. [Tips for writing C](https://zackoverflow.dev/writing/how-to-actually-write-c/#grouping-allocations)
+
+### Data orientated design
+- [ ] [CppCon 2014](https://www.youtube.com/watch?v=rX0ItVEVjHc)
+- [ ] [Andrew kelley talk](https://www.youtube.com/watch?v=rX0ItVEVjHc)
+
+### Memory
+1. [What every programmer should know about programming](https://people.freebsd.org/~lstewart/articles/cpumemory.pdf) - From HPPC course
+
+### SOLID Principles
+- [Test driven development in embedded C](https://pragprog.com/titles/jgade/test-driven-development-for-embedded-c/) - Has a section of SOLID principles related to TDD and execution in C, over a great book 
+- [Solid Relevance](https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html) - Robert C Martins (uncle bob) blog, lot of good stuff here.
+- [Webpage with examples of each principle](https://www.lowleveldesignmastery.com/blog/solid-principles/)
+
+### Fun technical details
+- [Making a program smaller](https://www.muppetlabs.com/~breadbox/software/tiny/teensy.html)
+- [A Good numerical analysis book](https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html) - From NUME, need to remeber it
 
 
-
-## Fun random stuff
-[Making a program smaller](https://www.muppetlabs.com/~breadbox/software/tiny/teensy.html)
-
-# Dev Notes
+## Things i tend to forget
 To List presets do for the various cmake stages
 ```
 cmake --list-presets # for config presets
