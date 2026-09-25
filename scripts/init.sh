@@ -4,8 +4,9 @@ if declare -F deactivate >/dev/null; then
 fi
 
 OLD_PS1="$PS1"
-cit="$PWD/scripts/cit/cit.sh"
+cit="$PWD/scripts/cit/cit.sh" # need to make this generic and not dependend on loc in project
 alias cit=${cit}
+alias vroom="$PWD/scripts/vroom.sh"
 
 deactivate(){
     unalias cit
@@ -16,6 +17,7 @@ deactivate(){
 grant(){
     for file in $1; do
         if [[ "$file" == "$0" ]]; then
+            echo "skipping"
             continue
         elif [[ ! -x "$file" ]]; then
             echo "Granting execute on ${file}"
@@ -24,8 +26,8 @@ grant(){
     done
 }
 
-grant $PWD/scripts/cit/*.sh
-grant $PWD/scripts/*.sh
+grant "$PWD/scripts/cit/*.sh"
+grant "$PWD/scripts/*.sh"
 unset -f grant
 
 export PS1="(Scipted) $PS1" # Akin to .venv
