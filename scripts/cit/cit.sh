@@ -19,7 +19,7 @@ case $mode in
         echo "  header | h - manages headers"
     ;;
     *)
-        echo "$Ohhh Cit! - mode is not a supported mode"
+        echo "Ohhh Cit! - mode is not a supported mode"
         exit 1
     ;;
 esac
