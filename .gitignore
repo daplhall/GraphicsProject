@@ -6,4 +6,3 @@ external/**
 .vscode
 *.tests
 assets/**
-cit
