@@ -1,3 +1,3 @@
-alias cit="$PWD/scripts/cit.sh"
+alias cit="$PWD/scripts/cit/cit.sh"
 
-export PS1="(cit enabled) $PS1" # Akin to .venv
+export PS1="(Scipted) $PS1" # Akin to .venv

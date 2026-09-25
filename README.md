@@ -72,8 +72,15 @@ ctest --presets <preset>
 # Development
 The repo is hosted [here](https://github.com/daplhall/GraphicsProject)
 
-
 I have a home CI/CD setup, which can be found [here](https://github.com/daplhall/jenkins-playground-cicd). Should have SonarCube community & CI/CD base env.
+
+## Cit
+Cit is a set of scripts that helps create header files and manage "modules"
+
+To initialize Cit you just have to
+```
+source scripts/init.sh
+```
 
 ## Documentation
 - Plantuml (for C4)
