@@ -5,18 +5,25 @@ module=$2
 case "$mode" in
     "add")
         command="mkdir"
+        message="Creating"
     ;;
     "rm")
         command="rm -r"
+        message="Removing"
     ;;
     *)
-    echo "Unknown command"
+    echo "Unknown module command"
     exit 1
     ;;
 esac
-echo "Removing source"
+
+module_print(){
+    echo "${message} $1"
+}
+
+module_print "source"
 $command src/$module
-echo "Removing test"
+module_print "tests"
 $command tests/$module
-echo "Removing headers"
+module_print "include"
 $command include/$module

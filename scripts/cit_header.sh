@@ -1,3 +1,4 @@
+#!/bin/sh
 module=$1
 file=$2
 
