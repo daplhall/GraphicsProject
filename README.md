@@ -12,6 +12,7 @@ It will likely also pivot into a computer simulation project before the graphics
 4. [Development](#development)
     - [Learning Resources](#learning-resources)
     - [Script Ideas](#ideas-for-helper-programs)
+    - [Cit](#cit)
 
 # State of project
 currently i am building the framework/tools for the project:
@@ -80,6 +81,19 @@ Cit is a set of scripts that helps create header files and manage "modules"
 To initialize Cit you just have to
 ```
 source scripts/init.sh
+```
+### Using Cit
+`cit` is just a script that calls other scripts, there are currently 2 modes
+
+- `module` or `m` - helps create new folders in `include`, `src` and `test`
+- `header` or `h` - creates a header file in a given module
+
+All modes can be seen with just invoking `cit`
+
+so if you want to create a new `module` and a new assosiated `header` you do
+```bash
+cit m add <module name>
+cit h <module name> <header name>.<extension>
 ```
 
 ## Documentation
