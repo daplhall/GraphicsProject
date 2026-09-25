@@ -3,9 +3,9 @@
 
 #include <gtest/gtest.h>
 #include "mem/arena.h"
-#include "collections/dictionary.h"
+#include "collections/hashmap.h"
 
-class Dictionary256B : public ::testing::Test{
+class Hashmap256B : public ::testing::Test{
     public:
         Arena *arena;
 

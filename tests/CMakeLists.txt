@@ -36,7 +36,7 @@ target_link_options(Memory
 )
 
 add_executable(collections-tests
-    collections/dictionary.cpp
+    collections/hashmap.cpp
 )
 
 target_link_libraries(collections-tests

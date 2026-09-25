@@ -25,7 +25,7 @@ target_link_options(Memory
 
 
 add_library(collections
-    collections/dictionary.c
+    collections/hashmap.c
 )
 
 target_include_directories(collections
