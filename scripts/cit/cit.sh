@@ -12,7 +12,11 @@ case $mode in
         "$cdir/cit_header.sh" $args
     ;;
     "")
-        echo "You have not chosen a mode"
+        echo "Cit - C Helper"
+        echo "--------------"
+        echo "Current modes:"
+        echo "  module - manages modules"
+        echo "  header - manages headers"
     ;;
     *)
         echo "$mode is not a supported mode"
