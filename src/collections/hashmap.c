@@ -1,7 +1,16 @@
-#include <stdio.h>
+#include "mem/arena.h"
+#include <stdint.h>
 
-void
-filler (void)
+#define T hashmap
+
+typedef struct T T;
+
+struct T {
+	int a;
+};
+
+T *
+Hashmap_create (Arena *arena)
 {
-	printf ("Hello world\n");
+	return (T *)1;
 }

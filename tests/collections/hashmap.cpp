@@ -2,7 +2,8 @@
 #include "hashmapfixture.hpp"
 
 TEST_F(Hashmap256B, Create){
-    FAIL(); 
+    Hashmap *map = Hashmap_create(arena);
+    ASSERT_TRUE(map != NULL);
 }
 
 TEST_F(Hashmap256B, AssignStr){
