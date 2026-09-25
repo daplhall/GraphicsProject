@@ -14,8 +14,9 @@ fi
 
 identity=${file%.*}
 identity=${identity^^}
+module=${module^^}
 identity="GUARD_${module}_${identity}_H"
-extension="${filename##*.}"
+extension="${file##*.}"
 
 push(){
     echo "$1" >> $destination
@@ -24,7 +25,7 @@ push(){
 push "#ifndef $identity"
 push "#define $identity"
 push ""
-if [[ "$extension" = "h" ]]; thenS
+if [[ "$extension" = "h" ]]; then
     push "#ifdef __cplusplus"
     push "extern "C" {"
     push "#endif"
