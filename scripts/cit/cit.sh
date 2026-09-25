@@ -6,10 +6,10 @@ cdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 case $mode in 
     "m" | "module")
-        "$cdir/cit_module.sh" $args
+        "$cdir/module.sh" $args
     ;;
     "h" | "header")
-        "$cdir/cit_header.sh" $args
+        "$cdir/header.sh" $args
     ;;
     "")
         echo "Cit - C Helper"

@@ -12,7 +12,7 @@ It will likely also pivot into a computer simulation project before the graphics
 4. [Development](#development)
     - [Learning Resources](#learning-resources)
     - [Script Ideas](#ideas-for-helper-programs)
-    - [Cit](#helper-scripts)
+    - [Helper scripts](#helper-scripts)
 
 # State of project
 currently i am building the framework/tools for the project:
