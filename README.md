@@ -153,8 +153,10 @@ ctest --list-presets # for test presets
 
     and maybe even the CMakeFile for it
     
-- Script that creates a module in source and its own `src` module, `test` folder and `include` header file.
+- Script that creates a module in source and its own `src` module, `test` folder and `include` header file
 
 - Script as above but removes a module
 
 - Script as above that copies a module
+
+- Script as above to rename
