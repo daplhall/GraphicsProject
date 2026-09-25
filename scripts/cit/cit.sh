@@ -5,10 +5,10 @@ args=${@:2}
 cdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 case $mode in 
-    "module")
+    "m" | "module")
         "$cdir/cit_module.sh" $args
     ;;
-    "header")
+    "h" | "header")
         "$cdir/cit_header.sh" $args
     ;;
     "")
@@ -19,7 +19,7 @@ case $mode in
         echo "  header - manages headers"
     ;;
     *)
-        echo "$mode is not a supported mode"
+        echo "$Ohhh Cit! - mode is not a supported mode"
         exit 1
     ;;
 esac

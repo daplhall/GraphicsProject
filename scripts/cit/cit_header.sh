@@ -4,10 +4,10 @@ file=$2
 
 destination=include/$module/$file
 
-if [ ! -d "include/${module}" ]; then
+if [[ ! -d "include/${module}" ]]; then
     echo "Module $module does not exits"
     exit 1
-elif [ -f $destination ]; then
+elif [[ -f $destination ]]; then
     echo "Header file $file exists in module $module"
     exit 1
 fi
@@ -18,15 +18,13 @@ identity="GUARD_${module}_${identity}_H"
 extension="${filename##*.}"
 
 push(){
-    local text=$1
-    echo "$text" >> $destination
+    echo "$1" >> $destination
 }
-
 
 push "#ifndef $identity"
 push "#define $identity"
 push ""
-if [ "$extension" != "hpp" ]; then
+if [[ "$extension" = "h" ]]; thenS
     push "#ifdef __cplusplus"
     push "extern "C" {"
     push "#endif"
