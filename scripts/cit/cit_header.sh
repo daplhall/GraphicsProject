@@ -27,7 +27,7 @@ push "#define $identity"
 push ""
 if [[ "$extension" = "h" ]]; then
     push "#ifdef __cplusplus"
-    push "extern "C" {"
+    push "extern \"C\" {"
     push "#endif"
     push ""
     push "#ifdef __cplusplus"
