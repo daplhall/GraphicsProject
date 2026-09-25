@@ -17,7 +17,7 @@ partition (char *mem, size_t n, size_t full_size)
 {
 	assert (n > 0);
 	char *cursor = mem;
-	struct _MemPool *current, *prev = EMPTYPOOL;
+	struct _MemPool *current = NULL, *prev = EMPTYPOOL;
 	for (size_t i = 0; i < n; ++i) {
 		current = (struct _MemPool *)(cursor + i * full_size);
 
