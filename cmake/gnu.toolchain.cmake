@@ -1,5 +1,8 @@
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+SET(CMAKE_C_COMPILER "gcc")
+SET(CMAKE_CXX_COMPILER "g++")
+
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(RASTER_CONFIG_FLAGS "-g3" "-O0")
     set(RASTER_SANITIZER_FLAGS "-fsanitize=address" "-fsanitize=leak")
