@@ -76,9 +76,14 @@ The repo is hosted [here](https://github.com/daplhall/GraphicsProject)
 I have a home CI/CD setup, which can be found [here](https://github.com/daplhall/jenkins-playground-cicd). Should have SonarCube community & CI/CD base env.
 
 ## Helper Scripts
-Cit is a set of scripts that helps create header files and manage "modules"
+This project contains a few helper scripts that makes some small things faster and more frictionless.
 
-To initialize Cit you just have to
+Current scripts are 
+
+- `cit`
+- `vroom`
+
+To initialize the scripts you just have to
 ```
 source scripts/init.sh
 ```
