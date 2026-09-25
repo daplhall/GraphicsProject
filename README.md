@@ -12,7 +12,7 @@ It will likely also pivot into a computer simulation project before the graphics
 4. [Development](#development)
     - [Learning Resources](#learning-resources)
     - [Script Ideas](#ideas-for-helper-programs)
-    - [Cit](#cit)
+    - [Cit](#helper-scripts)
 
 # State of project
 currently i am building the framework/tools for the project:
@@ -75,7 +75,7 @@ The repo is hosted [here](https://github.com/daplhall/GraphicsProject)
 
 I have a home CI/CD setup, which can be found [here](https://github.com/daplhall/jenkins-playground-cicd). Should have SonarCube community & CI/CD base env.
 
-## Cit
+## Helper Scripts
 Cit is a set of scripts that helps create header files and manage "modules"
 
 To initialize Cit you just have to
@@ -94,6 +94,13 @@ so if you want to create a new `module` and a new assosiated `header` you do
 ```bash
 cit m add <module name>
 cit h <module name> <header name>.<extension>
+```
+
+### Using Vroom
+`vroom` is a script that runs `cmake` config, build and then `ctest`. If no inputs
+it will just run release. You can specify the build type with
+```bash
+vroom <build type>
 ```
 
 ## Documentation

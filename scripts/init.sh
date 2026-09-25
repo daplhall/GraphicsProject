@@ -10,6 +10,7 @@ alias vroom="$PWD/scripts/vroom.sh"
 
 deactivate(){
     unalias cit
+    unalias vroom
     export PS1="$OLD_PS1" # Akin to .venv
     unset deactivate
 }
