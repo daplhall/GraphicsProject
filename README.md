@@ -189,3 +189,25 @@ ctest --list-presets # for test presets
 - Script as above that copies a module
 
 - Script as above to rename
+
+# Useful Micro Patterns for C
+C Systems Engineering Micro-Patterns
+
+1. Opaque Pointers (Pimpl / Abstract Data Types)
+2. Intrusive Linked Lists
+3. Flexible Array Members (FAM)
+4. Upcasting via Struct Embedding (Pseudo-Inheritance)
+5. X-Macros (Code-Gen / Single-Source of Truth)
+6. Arena / Region-Based Memory Allocation
+7. Compile-Time Assertions (_Static_assert)
+8. Bitmask Enums & Bitfields (Compact State Flags)
+9. Function Pointer Vtables (C-Style Polymorphism)
+10. Container-Of Macro (Pointer Arithmetic Upcasting)
+11. Designated Initializers for Interface Drivers
+12. Tagged Unions / Variant Types
+13. String Views (Pointer + Length Structs)
+14. Handle-Based Lookups (ID Indices instead of Raw Pointers)
+15. Do-While(0) Macro Block Scoping
+16. Static Sentinel Nodes (Branchless Data Structures)
+17. Copy-On-Write (COW) Data References
+18. Pool Allocators (Fixed-Size Block Management)
