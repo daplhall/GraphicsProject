@@ -6,13 +6,15 @@ cit_dir="$(dirname -- "$BASH_SOURCE")"
 
 case $mode in
     "add")
-        ${cit_dir}/add/add.sh $args
+        command=add
     ;;
     "rm")
-        echo "rm"
-        ${cit_dir}/rm/rm.sh $args
+        command=rm
     ;;
     *)
         echo "illegal command: ${mode}"
+        exit 1
     ;;
 esac
+
+${cit_dir}/route.sh ${command} $args
