@@ -1,22 +1,20 @@
-#!/bin/sh
-module=$1
-file=$2
+#!/usr/bin/env bash
+destination=$1
+base_destination="${destination%/*}"
+module="${base_destination##*/}"
 
-destination=include/$module/$file
-
-if [[ ! -d "include/${module}" ]]; then
-    echo "Module $module does not exits"
+if [[ ! -d "${base_destination}" ]]; then
+    echo "Module $base_destination does not exits"
     exit 1
 elif [[ -f $destination ]]; then
     echo "Header file $file exists in module $module"
     exit 1
 fi
 
-identity=${file%.*}
-identity=${identity^^}
-module=${module^^}
-identity="GUARD_${module}_${identity}_H"
-extension="${file##*.}"
+filename=${destination##*/}
+filename=${filename%.*}
+extension="${destination##*.}"
+identity="GUARD_${module^^}_${filename^^}_H"
 
 push(){
     echo "$1" >> $destination
@@ -24,7 +22,6 @@ push(){
 
 push "#ifndef $identity"
 push "#define $identity"
-push ""
 if [[ "$extension" = "h" ]]; then
     push "#ifdef __cplusplus"
     push "extern \"C\" {"
@@ -33,5 +30,7 @@ if [[ "$extension" = "h" ]]; then
     push "#ifdef __cplusplus"
     push "}"
     push "#endif"
+else
+    push ""
 fi
 push "#endif //$identity"

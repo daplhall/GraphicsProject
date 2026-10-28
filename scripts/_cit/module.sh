@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 mode=$1
 module=$2
 

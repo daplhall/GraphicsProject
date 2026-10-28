@@ -1,34 +1,24 @@
-#!/bin/sh
-if declare -F deactivate >/dev/null; then
+#!/usr/bin/env bash
+
+if declare -F deactivate; then
     deactivate
 fi
 
+folders="$(dirname -- "$BASH_SOURCE")"
+
 OLD_PS1="$PS1"
-cit="$PWD/scripts/cit/cit.sh" # need to make this generic and not dependend on loc in project
-alias cit=${cit}
-alias vroom="$PWD/scripts/vroom.sh"
+cit (){
+    "${folders}/cit/cit.sh" "$@"  
+}
+vroom (){
+    "${folders}/vroom.sh" "$@"
+}
 
 deactivate(){
-    unalias cit
-    unalias vroom
+    unset -f cit
+    unset -f vroom
     export PS1="$OLD_PS1" # Akin to .venv
-    unset deactivate
+    unset -f deactivate
 }
 
-grant(){
-    for file in $1; do
-        if [[ "$file" == "$0" ]]; then
-            echo "skipping"
-            continue
-        elif [[ ! -x "$file" ]]; then
-            echo "Granting execute on ${file}"
-            chmod +x "$file"
-        fi
-    done
-}
-
-grant "$PWD/scripts/cit/*.sh"
-grant "$PWD/scripts/*.sh"
-unset -f grant
-
-export PS1="(Scipted) $PS1" # Akin to .venv
+export PS1="(Scripted) $PS1" # Akin to .venv
