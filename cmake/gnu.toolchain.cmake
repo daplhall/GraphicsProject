@@ -4,12 +4,12 @@ SET(CMAKE_C_COMPILER "gcc")
 SET(CMAKE_CXX_COMPILER "g++")
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(RASTER_CONFIG_FLAGS "-g3" "-O0")
+    set(RASTER_CONFIG_FLAGS "-g3" "-Og")
     set(RASTER_SANITIZER_FLAGS "-fsanitize=address" "-fsanitize=leak")
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    set(RASTER_CONFIG_FLAGS "-O3")
+    set(RASTER_CONFIG_FLAGS "-O3" "-D_FORTIFY_SOURCE=2")
 endif()
 
 set(RASTER_WARNINGS_FLAGS
@@ -38,6 +38,7 @@ set(RASTER_CFLAGS
 set(RASTER_LCFLAGS
     ${RASTER_SANITIZER_FLAGS}
 )
+
 
 execute_process(
     COMMAND ${CMAKE_COMMAND} -E create_symlink
