@@ -1,3 +1,8 @@
+/*
+ * TODO Checkpoints
+ * TODO Checkpoints Dynamcic -- Deallocate from offset
+ * TODO Alignment
+ */
 #include "foundation.h"
 #include "intrusivelist.h"
 #include "mem/arena.h"
