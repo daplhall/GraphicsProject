@@ -3,12 +3,14 @@ add_library(Memory
     mem/pool.c
     mem/mem.c
     mem/alignment.c
+    mem/arena_temp.c
 )
 
 
 target_include_directories(Memory
     PRIVATE
     ./mem
+    .
     PUBLIC
     ${PROJECT_SOURCE_DIR}/include
 )

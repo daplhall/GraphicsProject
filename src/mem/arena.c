@@ -6,7 +6,6 @@
 #include "mem/arena.h"
 #include "alignment.h"
 #include "mem/mem.h"
-#include <SDL3/SDL_gamepad.h>
 #include <assert.h>
 #include <complex.h>
 #include <stdbool.h>

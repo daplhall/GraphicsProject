@@ -27,6 +27,7 @@ set(RASTER_WARNINGS_FLAGS
     "-Wnested-externs"
     "-Wmissing-include-dirs"
     "-Wuninitialized"
+    "-Wno-error=pedantic"
     #"-Wpadded"
 )
 

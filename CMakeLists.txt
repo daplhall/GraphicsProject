@@ -6,6 +6,7 @@ project(ComputerGraphics
     CXX
 )
 
+
 include(cmake/FindGoogleTest.cmake)
 include(cmake/FindSDL3.cmake)
 
