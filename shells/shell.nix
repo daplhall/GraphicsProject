@@ -8,6 +8,7 @@ pkgs.mkShell {
     sdl3
     cmake
     stdenv.cc.libc  # Explicitly ensures standard C library headers are present
+    clang-tools
   ];
   shellHook = ''
     echo "Welcome to the Nix development environment!"

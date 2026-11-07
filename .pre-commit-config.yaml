@@ -1,0 +1,10 @@
+repos:
+- repo: local
+  hooks:
+  - id: clangd-format
+    name: "[Clangd]::Format -- Formatting files"
+    description: "Formats files"
+    language: unsupported
+    entry: clang-format
+    args: [-i]
+    types_or: [c, c++, cuda]
