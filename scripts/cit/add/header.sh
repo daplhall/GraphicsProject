@@ -16,6 +16,8 @@ filename=${filename%.*}
 extension="${destination##*.}"
 identity="GUARD_${module^^}_${filename^^}_H"
 
+echo "Creating header : ${destination}"
+
 push(){
     echo "$1" >> $destination
 }
@@ -34,3 +36,4 @@ else
     push ""
 fi
 push "#endif //$identity"
+

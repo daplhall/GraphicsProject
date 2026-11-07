@@ -4,13 +4,13 @@ category=$2
 object=$3
 
 cit_dir="$(dirname -- "$BASH_SOURCE")"
-
+action=${cit_dir}/${mode}
 case $category in
     "h" | "header")
-        echo "create header"
+       ${action}/header.sh ${object}
     ;;
     "s" | "source")
-        echo "create source"
+       ${action}/sources.sh ${object}
     ;;
     "t" | "test")
         echo "create test"
@@ -19,7 +19,7 @@ case $category in
         echo "create interface"
     ;;
     "m" | "module" )
-        ${cit_dir}/${mode}/module.sh ${object}
+       ${action}/module.sh ${object}
     ;;
     *)
         echo "illegal category: ${category}"
