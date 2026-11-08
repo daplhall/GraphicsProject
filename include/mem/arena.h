@@ -19,7 +19,6 @@ typedef struct {
 
 enum Arena_type {
 	ARENA_STATIC,
-	ARENA_DYNMAIC,
 	ARENA_DYNAMIC,
 };
 

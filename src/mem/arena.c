@@ -136,7 +136,7 @@ Arena_push (T *arena, size_t nbytes, size_t align)
 		case ARENA_STATIC:
 			arena->errno = ARENA_BAD_ALLOC;
 			return NULL;
-		case ARENA_DYNMAIC:
+		case ARENA_DYNAMIC:
 			allocate_block (arena, nbytes);
 			aligned = align_by_block (arena->block, align);
 			break;
