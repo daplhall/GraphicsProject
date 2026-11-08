@@ -10,7 +10,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define T _Arena
+#define T	    _Arena
+#define ArenaOffset size_t
 
 #ifndef NDEBUG
 static bool
@@ -23,7 +24,7 @@ is_power_of_two (size_t align)
 struct MemoryBlock {
 	struct Node node;
 	size_t size;
-	size_t offset;
+	ArenaOffset offset;
 	char *block;
 };
 
@@ -182,12 +183,25 @@ Arena_clear (struct T *arena)
 	}
 }
 
+static ArenaIndex
+encode (struct MemoryBlock *memb)
+{
+	return memb->offset ^ (uintptr_t)memb;
+}
+
+static ArenaIndex
+decode (ArenaIndex position, struct MemoryBlock *memb)
+{
+	return position ^ (uintptr_t)memb;
+}
+
 struct ArenaSnapshot
 Arena_snapshot (struct T *arena)
 {
+	struct MemoryBlock *memb = arena->bottom;
 	return (struct ArenaSnapshot){
 		.arena = arena,
-		.index = arena->bottom->offset,
+		.position = encode (memb),
 		// what block did we start on, zebrist hash maybe?
 	};
 }
@@ -196,9 +210,11 @@ void
 Arena_rollback (struct ArenaSnapshot snapshot)
 {
 	struct T *arena = snapshot.arena;
+
 	switch (snapshot.arena->type) {
 	case ARENA_STATIC:
-		arena->bottom->offset = snapshot.index;
+		arena->bottom->offset
+		    = decode (snapshot.position, arena->bottom);
 		break;
 	case ARENA_DYNAMIC:
 		break;

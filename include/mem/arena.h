@@ -8,7 +8,8 @@ extern "C" {
 #include <stdalign.h>
 #include <stddef.h>
 
-#define T Arena
+#define T	   Arena
+#define ArenaIndex size_t
 
 typedef struct _Arena T;
 
@@ -26,7 +27,7 @@ enum Arena_error {
 
 struct ArenaSnapshot {
 	T *const arena;
-	size_t const index;
+	ArenaIndex const position;
 };
 
 void *Arena_push (T *arena, size_t nbytes, size_t alignment);
