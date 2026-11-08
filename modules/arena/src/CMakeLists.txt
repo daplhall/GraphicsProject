@@ -10,5 +10,7 @@ target_include_directories(arena
 )
 
 target_link_libraries(arena
-	PUBLIC Memory::mem
+	PRIVATE
+	Memory::mem
+	Foundation::shared
 )
