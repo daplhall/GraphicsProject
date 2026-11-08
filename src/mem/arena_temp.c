@@ -182,25 +182,27 @@ Arena_clear (struct T *arena)
 	}
 }
 
-/**
-enum Arena_type {
-    ARENA_STATIC,
-    ARENA_DYNMAIC
-};
+struct ArenaSnapshot
+Arena_snapshot (struct T *arena)
+{
+	return (struct ArenaSnapshot){
+		.arena = arena,
+		.index = arena->bottom->offset,
+		// what block did we start on, zebrist hash maybe?
+	};
+}
 
-enum Arena_error{
-    ARENA_OK,
-    ARENA_BAD_ALLOC,
-    ARENA_BAD_TYPE,
-    ARENA_BAD_POSITION,
-};
-
-void * Arena_push(T* arena, size_t nbytes, size_t alignment);
-void Arena_pop(T* arena, size_t nbytes);
-enum Arena_error Arena_setpos(T* arena, size_t pos);
-void Arena_clear(T* arena);
-enum Arena_error Arena_GetError(T *arena);
-// Scratch Arena
-P ArenaTemp_create(T* arena);
-void ArenaTemp_release(P *temp_arena);
-**/
+void
+Arena_rollback (struct ArenaSnapshot snapshot)
+{
+	struct T *arena = snapshot.arena;
+	switch (snapshot.arena->type) {
+	case ARENA_STATIC:
+		arena->bottom->offset = snapshot.index;
+		break;
+	case ARENA_DYNAMIC:
+		break;
+	default:
+		break;
+	}
+}

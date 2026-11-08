@@ -105,6 +105,17 @@ TEST_F (ArenaDynamic4, DynamicAllocateMultiple)
 	}
 }
 
+TEST_F (Arena256, Snapshot)
+{
+	ArenaSnapshot anchor = Arena_snapshot (arena);
+	char *ref = (char *)Arena_push (anchor.arena, sizeof (char), 1);
+	char *q = (char *)Arena_push (anchor.arena, sizeof (char), 1);
+	ASSERT_TRUE (ref != q);
+	Arena_rollback (anchor);
+	char *ptr = (char *)Arena_push (arena, sizeof (char), 1);
+	ASSERT_TRUE (ptr == ref);
+}
+
 /*
 TEST_F(Arena256, SetPosDynamic){
     FAIL();
