@@ -87,11 +87,18 @@ static_push (struct T *arena, size_t nbytes, size_t alignment)
 	uintptr_t next_adress = (uintptr_t)(memb->block + memb->offset);
 	uintptr_t padding = (-next_adress) & (alignment - 1);
 	// = (alignment - (next_adress % alignment)) % alignment
-	size_t additional = nbytes + padding;
-	size_t remaning = memb->size - memb->offset;
+	size_t additional;
+	size_t remaning;
+
+	if (nbytes > SIZE_MAX - padding)
+		return NULL;
+
+	additional = nbytes + padding;
+	remaning = memb->size - memb->offset;
 
 	if (additional > remaning)
 		return NULL;
+
 	memb->offset += additional;
 	return (void *)(next_adress + padding);
 }
@@ -101,28 +108,27 @@ dynamic_push (struct T *arena, size_t nbytes, size_t alignment)
 {
 
 	struct MemoryBlock *memb = arena->bottom;
-	uintptr_t next_adress = (uintptr_t)(memb->block + memb->offset);
-	uintptr_t padding = (-next_adress) & (alignment - 1);
+	struct MemoryBlock *new_block = NULL;
+	uintptr_t next_adress, padding;
+	size_t new_size;
+	char *ptr;
+
+	if ((ptr = static_push (arena, nbytes, alignment)) != NULL)
+		return ptr;
+
+	next_adress = (uintptr_t)(memb->block + memb->offset);
+	padding = (-next_adress) & (alignment - 1);
 	// = (alignment - (next_adress % alignment)) % alignment
-	size_t additional = nbytes + padding;
-	size_t remaning = memb->size - memb->offset;
 
-	if (additional > remaning) {
-		size_t new_size = max (additional, memb->size * 2);
-		struct MemoryBlock *new_block;
+	new_size = max (nbytes + padding, memb->size * 2);
 
-		if ((new_block = ALLOC (sizeof (struct MemoryBlock) + new_size))
-		    == NULL)
-			return NULL;
-		block_init (new_block, new_size);
-		new_block->node.prev = &memb->node;
-		arena->bottom = new_block;
-
-		return static_push (arena, nbytes, alignment);
-	} else {
-		memb->offset += nbytes + padding;
-		return (void *)(next_adress + padding);
-	}
+	if ((new_block = ALLOC (sizeof (struct MemoryBlock) + new_size))
+	    == NULL)
+		return NULL;
+	block_init (new_block, new_size);
+	new_block->node.prev = &memb->node;
+	arena->bottom = new_block;
+	return static_push (arena, nbytes, alignment);
 }
 
 void *
