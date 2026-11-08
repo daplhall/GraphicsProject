@@ -2,9 +2,9 @@
  * TODO Checkpoints
  * TODO Checkpoints Dynamcic -- Deallocate from offset
  */
+#include "mem/arena/arena.h"
 #include "foundation.h"
 #include "intrusivelist.h"
-#include "mem/arena/arena.h"
 #include "mem/mem.h"
 #include <assert.h>
 #include <stddef.h>
