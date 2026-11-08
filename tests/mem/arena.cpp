@@ -1,4 +1,4 @@
-#include "mem/arena.h"
+#include "mem/arena/arena.h"
 #include "arenafixture.hpp"
 #include "memspy.h"
 #include <cstdlib>
@@ -114,6 +114,32 @@ TEST_F (Arena256, Snapshot)
 	Arena_rollback (anchor);
 	char *ptr = (char *)Arena_push (arena, sizeof (char), 1);
 	ASSERT_TRUE (ptr == ref);
+}
+
+TEST_F (ArenaDynamic4, Snapshot)
+{
+	ArenaSnapshot anchor = Arena_snapshot (arena);
+
+	char *p = (char *)Arena_push (anchor.arena, 1, 1);
+	Arena_rollback (anchor);
+	char *q = (char *)Arena_push (anchor.arena, 1, 1);
+	ASSERT_TRUE (q == p);
+}
+
+TEST_F (ArenaDynamic4, SnapshotDynamic)
+{
+	ArenaSnapshot anchor = Arena_snapshot (arena);
+
+	char *ref = (char *)Arena_push (anchor.arena, 1, 1);
+	Arena_rollback (anchor);
+
+	ArenaSnapshot anchor2 = Arena_snapshot (arena);
+	char *new_block = (char *)Arena_push (anchor2.arena, 5, 1);
+	ASSERT_TRUE (new_block != ref);
+
+	Arena_rollback (anchor2);
+	char *old_block = (char *)Arena_push (arena, 1, 1);
+	ASSERT_TRUE (old_block == new_block);
 }
 
 /*

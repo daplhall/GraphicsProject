@@ -1,5 +1,4 @@
 #include "mem/pool.h"
-#include "mem/arena.h"
 #include <assert.h>
 #include <stdalign.h>
 #include <stdbool.h>

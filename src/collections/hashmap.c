@@ -1,4 +1,4 @@
-#include "mem/arena.h"
+#include "mem/arena/arena.h"
 #include <stdint.h>
 
 #define T hashmap

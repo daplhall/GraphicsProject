@@ -4,7 +4,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include <mem/arena.h>
 #include <stdalign.h>
 #include <stddef.h>
 

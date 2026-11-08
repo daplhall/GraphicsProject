@@ -4,11 +4,12 @@
  */
 #include "foundation.h"
 #include "intrusivelist.h"
-#include "mem/arena.h"
+#include "mem/arena/arena.h"
 #include "mem/mem.h"
 #include <assert.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #define T	    _Arena
 #define ArenaOffset size_t
@@ -206,17 +207,41 @@ Arena_snapshot (struct T *arena)
 	};
 }
 
+static void
+dynamic_rollback (struct T *arena, ArenaIndex position)
+{
+	struct Node *node = &arena->bottom->node;
+
+	printf ("CALLED!");
+	while (node != NULL) {
+		struct MemoryBlock *block;
+		ArenaIndex offset;
+
+		block = container_of (node, struct MemoryBlock, node);
+		offset = decode (position, block);
+
+		if (offset == block->offset) {
+			block->offset = offset;
+			printf ("FOUND!");
+			return;
+		}
+
+		node = node->prev;
+		FREE (block);
+	}
+}
+
 void
 Arena_rollback (struct ArenaSnapshot snapshot)
 {
 	struct T *arena = snapshot.arena;
-
 	switch (snapshot.arena->type) {
 	case ARENA_STATIC:
 		arena->bottom->offset
 		    = decode (snapshot.position, arena->bottom);
 		break;
 	case ARENA_DYNAMIC:
+		dynamic_rollback (arena, snapshot.position);
 		break;
 	default:
 		break;

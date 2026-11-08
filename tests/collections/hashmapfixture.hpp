@@ -1,23 +1,27 @@
 #ifndef GUARD_DICTIONARYFIXTURE_HPP
 #define GUARD_DICTIONARYFIXTURE_HPP
 
-#include <gtest/gtest.h>
-#include "mem/arena.h"
 #include "collections/hashmap.h"
+#include "mem/arena/arena.h"
+#include <gtest/gtest.h>
 
-class Hashmap256B : public ::testing::Test{
-    public:
-        Arena *arena;
+class Hashmap256B : public ::testing::Test
+{
+      public:
+	Arena *arena;
 
-    protected:
+      protected:
+	void
+	SetUp ()
+	{
+		arena = Arena_create (256, ARENA_STATIC);
+	}
 
-        void SetUp(){
-            arena = Arena_create(256, ARENA_STATIC);
-        }
-        
-        void TearDown(){
-            Arena_release(arena);
-        }
+	void
+	TearDown ()
+	{
+		Arena_release (arena);
+	}
 };
 
 #endif // GUARD_DICTIONARYFIXTURE_HPP

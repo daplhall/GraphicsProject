@@ -5,14 +5,14 @@
 extern "C" {
 #endif
 
-    #include "mem/arena.h"
+#include "mem/arena/arena.h"
 
-    #define Hashmap T
-    typedef struct T T;
-    
-    T* Hashmap_create(Arena *arena);
+#define Hashmap T
+typedef struct T T;
+
+T *Hashmap_create (Arena *arena);
 
 #ifdef __cplusplus
 }
 #endif
-#endif //GUARD_COLLECTIONS_HASHMAP_H
+#endif // GUARD_COLLECTIONS_HASHMAP_H
