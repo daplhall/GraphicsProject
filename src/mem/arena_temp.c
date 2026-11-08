@@ -80,25 +80,20 @@ Arena_release (struct T *arena)
 	FREE (arena);
 }
 
-static uintptr_t
-alignment_ptr (uintptr_t ptr, size_t alignment)
-{
-	return ((ptr + alignment - 1) & ~(alignment - 1));
-}
-
 static void *
 static_push (struct T *arena, size_t nbytes, size_t alignment)
 {
-	intptr_t aligned_ptr;
 	struct MemoryBlock *memb = arena->bottom;
-	char *next_adress = memb->block + memb->offset;
+	uintptr_t next_adress = (uintptr_t)(memb->block + memb->offset);
+	intptr_t padding
+	    = (-next_adress)
+	      & (alignment - 1); // short for  (alignment - (address %
+				 // alignment)) % alignment
 
-	aligned_ptr = alignment_ptr ((uintptr_t)next_adress, alignment);
-	intptr_t padding = aligned_ptr - (uintptr_t)next_adress;
 	if (nbytes + padding > memb->size - memb->offset)
 		return NULL;
 	memb->offset += nbytes + padding;
-	return (void *)aligned_ptr;
+	return (void *)(next_adress + padding);
 }
 
 static void *
