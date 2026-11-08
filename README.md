@@ -211,3 +211,10 @@ C Systems Engineering Micro-Patterns
 16. Static Sentinel Nodes (Branchless Data Structures)
 17. Copy-On-Write (COW) Data References
 18. Pool Allocators (Fixed-Size Block Management)
+
+# Structure
+src -- buisness logic  
+modules -- generic code that can be copied to other projects
+
+# TODO
+rename foundations to cotainer_of and intrusivelist to intrusive_list
