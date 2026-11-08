@@ -107,8 +107,7 @@ dynamic_push (struct T *arena, size_t nbytes, size_t alignment)
 	size_t additional = nbytes + padding;
 	size_t remaning = memb->size - memb->offset;
 
-	if (additional <= remaning) {
-		return static_push (arena, nbytes, alignment);
+	if (additional > remaning) {
 		size_t new_size = max (additional, memb->size * 2);
 		struct MemoryBlock *new_block;
 
