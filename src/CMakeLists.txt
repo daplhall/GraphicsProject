@@ -1,9 +1,8 @@
 add_library(Memory
-    mem/arena.c
+    mem/arena_temp.c
     mem/pool.c
     mem/mem.c
     mem/alignment.c
-    mem/arena_temp.c
 )
 
 

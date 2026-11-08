@@ -30,15 +30,9 @@ enum Arena_error {
 };
 
 void *Arena_push (T *arena, size_t nbytes, size_t alignment);
-void Arena_pop (T *arena, size_t nbytes);
-enum Arena_error Arena_setpos (T *arena, size_t pos);
 void Arena_clear (T *arena);
-enum Arena_error Arena_GetError (T *arena);
 T *Arena_create (size_t reserve, enum Arena_type type);
 void Arena_release (T *arena);
-// Scratch Arena
-P ArenaTemp_create (T *arena);
-void ArenaTemp_release (P *temp_arena);
 
 #undef T
 #undef P

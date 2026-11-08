@@ -12,6 +12,11 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(RASTER_CONFIG_FLAGS "-O3" "-D_FORTIFY_SOURCE=2")
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+    set(RASTER_CONFIG_FLAGS "-O2")
+    set(RASTER_SANITIZER_FLAGS  "-fsanitize=address,undefined,leak")
+endif()
+
 set(RASTER_WARNINGS_FLAGS
     "-Wall"
     "-Werror"

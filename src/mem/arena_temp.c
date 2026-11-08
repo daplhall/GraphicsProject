@@ -1,7 +1,6 @@
 /*
  * TODO Checkpoints
  * TODO Checkpoints Dynamcic -- Deallocate from offset
- * TODO Alignment
  */
 #include "foundation.h"
 #include "intrusivelist.h"
@@ -13,7 +12,15 @@
 
 #define T _Arena
 
-struct MemoryList {
+#ifndef NDEBUG
+static bool
+is_power_of_two (size_t align)
+{
+	return !(align & (align - 1));
+}
+#endif
+
+struct MemoryBlock {
 	struct Node node;
 	size_t size;
 	size_t offset;
@@ -21,28 +28,40 @@ struct MemoryList {
 };
 
 struct T {
-	struct MemoryList *bottom;
+	struct MemoryBlock *bottom;
 	size_t size;
 	enum Arena_type type;
 };
 
 static void
-list_init (struct MemoryList *list, size_t reserve)
+block_init (struct MemoryBlock *list, size_t reserve)
 {
-	*list = (struct MemoryList){ .node = (struct Node){ .prev = NULL,
-							    .next = NULL },
-				     .size = reserve,
-				     .offset = 0,
-				     .block = (char *)(list + 1) };
+	*list = (struct MemoryBlock){ 
+		.node = (struct Node){
+			.prev = NULL,
+			.next = NULL,
+		},
+		.size = reserve,
+		.offset = 0,
+		.block = (char *)(list + 1) };
 }
 
 struct T *
 Arena_create (size_t reserve, enum Arena_type type)
 {
-	struct T *arena = CALLOC (1, sizeof (struct T));
-	struct MemoryList *list = ALLOC (sizeof (struct MemoryList) + reserve);
+	struct T *arena;
+	struct MemoryBlock *list;
 
-	list_init (list, reserve);
+	if ((arena = CALLOC (1, sizeof (struct T))) == NULL) {
+		return NULL;
+	}
+
+	if ((list = ALLOC (sizeof (struct MemoryBlock) + reserve)) == NULL) {
+		FREE (arena);
+		return NULL;
+	}
+
+	block_init (list, reserve);
 	*arena = (struct T){ .bottom = list, .size = reserve, .type = type };
 
 	return arena;
@@ -53,8 +72,8 @@ Arena_release (struct T *arena)
 {
 	struct Node *node = &arena->bottom->node;
 	while (node != NULL) {
-		struct MemoryList *list;
-		list = container_of (node, struct MemoryList, node);
+		struct MemoryBlock *list;
+		list = container_of (node, struct MemoryBlock, node);
 		node = list->node.prev;
 		FREE (list);
 	}
@@ -62,57 +81,81 @@ Arena_release (struct T *arena)
 }
 
 static uintptr_t
-alignment_offset (uintptr_t ptr, size_t alignment)
+alignment_ptr (uintptr_t ptr, size_t alignment)
 {
-	return ((ptr + alignment - 1) & ~(alignment - 1)) - ptr;
-}
-
-static void *
-upsert_list (struct MemoryList *list, size_t new_offset, uintptr_t alignment)
-{
-	uintptr_t aoffset;
-	char *block = list->block;
-
-	aoffset = alignment_offset ((uintptr_t)block, alignment);
-	block += list->offset + aoffset;
-	list->offset = new_offset;
-	return (void *)(block + aoffset);
+	return ((ptr + alignment - 1) & ~(alignment - 1));
 }
 
 static void *
 static_push (struct T *arena, size_t nbytes, size_t alignment)
 {
-	struct MemoryList *list = arena->bottom;
-	size_t new_offset = list->offset + nbytes;
-	if (list->size < new_offset)
+	intptr_t aligned_ptr;
+	struct MemoryBlock *memb = arena->bottom;
+	char *next_adress = memb->block + memb->offset;
+
+	aligned_ptr = alignment_ptr ((uintptr_t)next_adress, alignment);
+	intptr_t padding = aligned_ptr - (uintptr_t)next_adress;
+	if (nbytes + padding > memb->size - memb->offset)
 		return NULL;
-	return upsert_list (list, new_offset, alignment);
+	memb->offset += nbytes + padding;
+	return (void *)aligned_ptr;
 }
 
 static void *
 dynamic_push (struct T *arena, size_t nbytes, size_t alignment)
 {
-	struct MemoryList *list = arena->bottom, *new = NULL;
-	size_t new_offset = list->offset + nbytes;
-	if (list->size < new_offset) {
-		new = ALLOC (sizeof (struct MemoryList) + nbytes + list->size);
-		list_init (new, nbytes + list->size);
-
-		new->node.prev = &list->node;
-		arena->bottom = new;
-		list = new;
-	}
-	return upsert_list (list, new_offset, alignment);
+	return NULL;
 }
 
 void *
 Arena_push (struct T *arena, size_t nbytes, size_t alignment)
 {
-	if (arena->type == ARENA_DYNAMIC)
+	assert (alignment != 0);
+	assert (is_power_of_two (alignment));
+	switch (arena->type) {
+	case ARENA_DYNAMIC:
 		return dynamic_push (arena, nbytes, alignment);
-
-	else
+	case ARENA_STATIC:
 		return static_push (arena, nbytes, alignment);
+	default:
+		return NULL;
+	};
+}
+
+static void
+static_clear (struct T *arena)
+{
+	arena->bottom->offset = 0;
+}
+
+/*
+ * In dynamic we also relase memory when we clear it or stamp it
+ */
+static void
+dynamic_clear (struct T *arena)
+{
+	struct Node *node = &arena->bottom->node;
+	struct MemoryBlock *list;
+	while (node->prev != NULL) {
+		list = container_of (node, struct MemoryBlock, node);
+		node = list->node.prev;
+		FREE (list);
+	}
+	list = container_of (node, struct MemoryBlock, node);
+	list->offset = 0;
+}
+
+void
+Arena_clear (struct T *arena)
+{
+	switch (arena->type) {
+	case ARENA_STATIC:
+		static_clear (arena);
+		break;
+	case ARENA_DYNAMIC:
+		dynamic_clear (arena);
+		break;
+	}
 }
 
 /**
