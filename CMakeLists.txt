@@ -13,8 +13,11 @@ include(cmake/FindGoogleTest.cmake)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 
-add_subdirectory(modules)
+add_subdirectory(modules/mem)
+add_subdirectory(modules/arena)
 
 enable_testing()
 add_subdirectory(spies)
-add_subdirectory(tests)
+#add_subdirectory(modules/mem/tests)
+#add_subdirectory(modules/arena/tests)
+#add_subdirectory(tests)

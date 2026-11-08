@@ -1,4 +1,4 @@
-#include "mem/arena/arena.h"
+#include "arena/arena.h"
 #include "arenafixture.hpp"
 #include "memspy.h"
 #include <cstdlib>
