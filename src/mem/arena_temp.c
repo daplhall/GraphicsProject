@@ -9,6 +9,7 @@
 #include "mem/mem.h"
 #include <assert.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #define T _Arena
 
@@ -60,13 +61,22 @@ Arena_release (struct T *arena)
 	FREE (arena);
 }
 
-static void *
-upsert_list (struct MemoryList *list, size_t new_offset)
+static uintptr_t
+alignment_offset (uintptr_t ptr, size_t alignment)
 {
+	return ((ptr + alignment - 1) & ~(alignment - 1)) - ptr;
+}
+
+static void *
+upsert_list (struct MemoryList *list, size_t new_offset, uintptr_t alignment)
+{
+	uintptr_t aoffset;
 	char *block = list->block;
-	block += list->offset;
+
+	aoffset = alignment_offset ((uintptr_t)block, alignment);
+	block += list->offset + aoffset;
 	list->offset = new_offset;
-	return (void *)(block);
+	return (void *)(block + aoffset);
 }
 
 static void *
@@ -76,7 +86,7 @@ static_push (struct T *arena, size_t nbytes, size_t alignment)
 	size_t new_offset = list->offset + nbytes;
 	if (list->size < new_offset)
 		return NULL;
-	return upsert_list (list, new_offset);
+	return upsert_list (list, new_offset, alignment);
 }
 
 static void *
@@ -92,7 +102,7 @@ dynamic_push (struct T *arena, size_t nbytes, size_t alignment)
 		arena->bottom = new;
 		list = new;
 	}
-	return upsert_list (list, new_offset);
+	return upsert_list (list, new_offset, alignment);
 }
 
 void *
