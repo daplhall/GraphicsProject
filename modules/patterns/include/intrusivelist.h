@@ -4,12 +4,12 @@
 extern "C" {
 #endif
 
-	struct Node {
-		struct Node *next;
-		struct Node *prev;
-	};
+struct Node {
+	struct Node *next;
+	struct Node *prev;
+};
 
 #ifdef __cplusplus
 }
 #endif
-#endif //GUARD_SRC_INTRUSIVELIST_H
+#endif // GUARD_SRC_INTRUSIVELIST_H
