@@ -12,7 +12,7 @@ target_include_directories(mem-tests
 )
 
 add_executable(arena-tests
-    mem/arena.cpp
+    mem/arena/arena.cpp
     mem/pool.cpp
 )
 target_link_libraries(arena-tests
