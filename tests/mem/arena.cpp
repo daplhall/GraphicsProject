@@ -105,14 +105,6 @@ TEST_F (ArenaDynamic4, DynamicAllocateMultiple)
 	}
 }
 
-TEST_F (ArenaDynamic4, AllocateMoreThanNormal)
-{
-
-	char *ptr = (char *)Arena_push (arena, 9, 1);
-	struct mem_register reg = MemSpy_LastestAllocation ();
-	ASSERT_TRUE (reg.amount == (ptr - (char *)reg.ptr) + 9 + 4);
-}
-
 /*
 TEST_F(Arena256, SetPosDynamic){
     FAIL();

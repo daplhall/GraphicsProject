@@ -85,21 +85,45 @@ static_push (struct T *arena, size_t nbytes, size_t alignment)
 {
 	struct MemoryBlock *memb = arena->bottom;
 	uintptr_t next_adress = (uintptr_t)(memb->block + memb->offset);
-	intptr_t padding
-	    = (-next_adress)
-	      & (alignment - 1); // short for  (alignment - (address %
-				 // alignment)) % alignment
+	uintptr_t padding = (-next_adress) & (alignment - 1);
+	// = (alignment - (next_adress % alignment)) % alignment
+	size_t additional = nbytes + padding;
+	size_t remaning = memb->size - memb->offset;
 
-	if (nbytes + padding > memb->size - memb->offset)
+	if (additional > remaning)
 		return NULL;
-	memb->offset += nbytes + padding;
+	memb->offset += additional;
 	return (void *)(next_adress + padding);
 }
 
 static void *
 dynamic_push (struct T *arena, size_t nbytes, size_t alignment)
 {
-	return NULL;
+
+	struct MemoryBlock *memb = arena->bottom;
+	uintptr_t next_adress = (uintptr_t)(memb->block + memb->offset);
+	uintptr_t padding = (-next_adress) & (alignment - 1);
+	// = (alignment - (next_adress % alignment)) % alignment
+	size_t additional = nbytes + padding;
+	size_t remaning = memb->size - memb->offset;
+
+	if (additional <= remaning) {
+		return static_push (arena, nbytes, alignment);
+		size_t new_size = max (additional, memb->size * 2);
+		struct MemoryBlock *new_block;
+
+		if ((new_block = ALLOC (sizeof (struct MemoryBlock) + new_size))
+		    == NULL)
+			return NULL;
+		block_init (new_block, new_size);
+		new_block->node.prev = &memb->node;
+		arena->bottom = new_block;
+
+		return static_push (arena, nbytes, alignment);
+	} else {
+		memb->offset += nbytes + padding;
+		return (void *)(next_adress + padding);
+	}
 }
 
 void *
