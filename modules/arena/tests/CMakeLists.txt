@@ -3,7 +3,6 @@ add_executable(arena-tests
 )
 target_link_libraries(arena-tests
     GTest::gtest_main
-    memspy
     Memory::arena
 )
 

@@ -1,6 +1,5 @@
 #include "arena/arena.h"
 #include "arenafixture.hpp"
-#include "memspy.h"
 #include <cstdlib>
 #include <limits.h>
 

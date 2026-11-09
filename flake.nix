@@ -14,18 +14,21 @@
 			};
 		in
 			pkgs.mkShell {
-				packages = with pkgs; [
+				nativeBuildInputs = with pkgs; [
 					gcc
 					clang
 					ninja
 					cmake
 					gdb
 					clang-tools
+				];
+				buildInputs = with pkgs; [
 					sdl3
 					gtest
 				];
 
 		shellHook = ''
+			export CMAKE_PREFIX_PATH="${pkgs.gtest}:${pkgs.sdl3}:$CMAKE_PREFIX_PATH"	
 			export PS1="[C dev env] $PS1"
 			echo "Welcome to your C development environment!"
 		'';
