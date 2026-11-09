@@ -12,12 +12,8 @@ target_include_directories(Memory
 	${CMAKE_CURRENT_SOURCE_DIR}/../include
 )
 
-target_compile_options(Memory
+target_link_libraries(Memory
 	PRIVATE
-	${RASTER_CFLAGS}
-)
-
-target_link_options(Memory
-	PUBLIC
-	${RASTER_LCFLAGS}
+	Options::compile
+	Options::link
 )

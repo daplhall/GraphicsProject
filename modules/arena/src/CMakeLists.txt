@@ -13,4 +13,6 @@ target_link_libraries(arena
 	PRIVATE
 	Memory::mem
 	Foundation::shared
+	Options::compile
+	Options::link
 )
