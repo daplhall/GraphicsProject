@@ -10,12 +10,12 @@ extern "C" {
  */
 #if defined(__GNUC__) || defined(__clang__) || defined(BASE_CONTAINER_OF)
 #define container_of(ptr, type, member)                             \
-	({                                                          \
+	__extension__ ({                                            \
 		const typeof (((type *)0)->member) *__mptr = (ptr); \
 		(type *)((char *)__mptr - offsetof (type, member)); \
 	})
 #define max(a, b)                        \
-	({                               \
+	__extension__ ({                 \
 		__typeof__ (a) _a = (a); \
 		__typeof__ (b) _b = (b); \
 		_a > _b ? _a : _b;       \
