@@ -28,7 +28,6 @@
 				];
 
 		shellHook = ''
-			export CMAKE_PREFIX_PATH="${pkgs.gtest}:${pkgs.sdl3}:$CMAKE_PREFIX_PATH"	
 			export PS1="[C dev env] $PS1"
 			echo "Welcome to your C development environment!"
 		'';
