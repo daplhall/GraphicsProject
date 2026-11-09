@@ -52,7 +52,7 @@ Arena_create (size_t reserve, enum Arena_type type)
 	}
 
 	block_init (list, reserve);
-	*arena = (struct T){ .bottom = list, .size = reserve, .type = type };
+	*arena = (struct T){ .bottom = list, .type = type };
 
 	return arena;
 }
