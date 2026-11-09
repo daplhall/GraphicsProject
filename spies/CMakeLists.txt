@@ -5,8 +5,8 @@ add_library(memspy
 
 target_include_directories(memspy
     PUBLIC
-    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/modules/mem/include
     ${PROJECT_SOURCE_DIR}/spies/mem
     PRIVATE
-    ${PROJECT_SOURCE_DIR}/src/mem
+    ${PROJECT_SOURCE_DIR}/modules/mem/src/
 )

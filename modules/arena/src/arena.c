@@ -3,9 +3,9 @@
  * TODO Checkpoints Dynamcic -- Deallocate from offset
  */
 #include "arena/arena.h"
+#include "arena_internal.h"
 #include "mem/mem.h"
 #include "shared/foundation.h"
-#include "shared/intrusivelist.h"
 #include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -22,19 +22,6 @@ is_power_of_two (size_t align)
 	return !(align & (align - 1));
 }
 #endif
-
-struct MemoryBlock {
-	struct Node node;
-	size_t size;
-	ArenaOffset offset;
-	char *block;
-};
-
-struct T {
-	struct MemoryBlock *bottom;
-	size_t size;
-	enum Arena_type type;
-};
 
 static inline void
 block_init (struct MemoryBlock *list, size_t reserve)
@@ -181,36 +168,6 @@ Arena_clear (struct T *arena)
 		break;
 	case ARENA_DYNAMIC:
 		dynamic_clear (arena);
-		break;
-	}
-}
-
-static inline ArenaIndex
-encode (struct MemoryBlock *memb)
-{
-	return memb->offset ^ (uintptr_t)memb;
-}
-
-struct ArenaSnapshot
-Arena_snapshot (struct T *arena)
-{
-	struct MemoryBlock *memb = arena->bottom;
-	return (struct ArenaSnapshot){
-		.arena = arena,
-		.position = encode (memb),
-		// what block did we start on, zebrist hash maybe?
-	};
-}
-
-void
-Arena_rollback (struct ArenaSnapshot snapshot)
-{
-	switch (snapshot.arena->type) {
-	case ARENA_STATIC:
-		break;
-	case ARENA_DYNAMIC:
-		break;
-	default:
 		break;
 	}
 }

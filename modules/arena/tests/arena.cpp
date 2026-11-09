@@ -106,54 +106,37 @@ TEST_F (ArenaDynamic4, DynamicAllocateMultiple)
 
 TEST_F (Arena256, Snapshot)
 {
-	ArenaSnapshot anchor = Arena_snapshot (arena);
-	char *ref = (char *)Arena_push (anchor.arena, sizeof (char), 1);
-	char *q = (char *)Arena_push (anchor.arena, sizeof (char), 1);
+	ArenaSnapshot *anchor = Arena_snapshot (arena);
+	char *ref = (char *)Arena_push (arena, sizeof (char), 1);
+	char *q = (char *)Arena_push (arena, sizeof (char), 1);
 	ASSERT_TRUE (ref != q);
-	Arena_rollback (anchor);
+	Arena_rollback (arena, anchor);
 	char *ptr = (char *)Arena_push (arena, sizeof (char), 1);
 	ASSERT_TRUE (ptr == ref);
 }
 
 TEST_F (ArenaDynamic4, Snapshot)
 {
-	ArenaSnapshot anchor = Arena_snapshot (arena);
+	ArenaSnapshot *anchor = Arena_snapshot (arena);
 
-	char *p = (char *)Arena_push (anchor.arena, 1, 1);
-	Arena_rollback (anchor);
-	char *q = (char *)Arena_push (anchor.arena, 1, 1);
+	char *p = (char *)Arena_push (arena, 1, 1);
+	Arena_rollback (arena, anchor);
+	char *q = (char *)Arena_push (arena, 1, 1);
 	ASSERT_TRUE (q == p);
 }
 
 TEST_F (ArenaDynamic4, SnapshotDynamic)
 {
-	ArenaSnapshot anchor = Arena_snapshot (arena);
+	ArenaSnapshot *anchor = Arena_snapshot (arena);
 
-	char *ref = (char *)Arena_push (anchor.arena, 1, 1);
-	Arena_rollback (anchor);
+	char *ref = (char *)Arena_push (arena, 1, 1);
+	Arena_rollback (arena, anchor);
 
-	ArenaSnapshot anchor2 = Arena_snapshot (arena);
-	char *new_block = (char *)Arena_push (anchor2.arena, 5, 1);
+	ArenaSnapshot *anchor2 = Arena_snapshot (arena);
+	char *new_block = (char *)Arena_push (arena, 5, 1);
 	ASSERT_TRUE (new_block != ref);
 
-	Arena_rollback (anchor2);
+	Arena_rollback (arena, anchor2);
 	char *old_block = (char *)Arena_push (arena, 1, 1);
 	ASSERT_TRUE (old_block == new_block);
 }
-
-/*
-TEST_F(Arena256, SetPosDynamic){
-    FAIL();
-}
-TEST_F(Arena256, SetPosDynamicToLarge){
-    FAIL();
-}
-
-TEST_F(Arena256, SetPosDynamicNegative){
-    FAIL();
-}
-
-TEST_F(Arena256, Clear){
-    FAIL();
-}
-*/
