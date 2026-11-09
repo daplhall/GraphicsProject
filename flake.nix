@@ -1,39 +1,34 @@
-
 {
-	description = "C23 development environment";
+  description = "C development environment";
 
-	inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-	outputs = { self, nixpkgs }:
+  outputs = { self, nixpkgs }: 
+	let
+		system = "x86_64-linux";
+	in {
+		devShells.${system}.default =
 		let
-		systems = [
-			"x86_64-linux"
-			#"aarch64-linux"
-			#"x86_64-darwin"
-			#"aarch64-darwin"
-		];
+			pkgs = import nixpkgs {
+				inherit system;
+			};
+		in
+			pkgs.mkShell {
+				packages = with pkgs; [
+					gcc
+					clang
+					ninja
+					cmake
+					gdb
+					clang-tools
+					sdl3
+					gtest
+				];
 
-		forAllSystems = nixpkgs.lib.genAttrs systems;
-		in {
-			devShells = forAllSystems (system:
-			let
-			  pkgs = nixpkgs.legacyPackages.${system};
-			in
-			{
-			  default = pkgs.mkShell {
-			    packages = with pkgs; [
-			      gcc
-			      clang
-			      gnumake
-			      gdb
-			      clang-tools
-			    ];
-			  };
-			});
-
-			shellHook = ''
-			export PS1="[C env] $PS1"
-			Welcome to your C language dev enviromment 
-			'';
-		};
+		shellHook = ''
+			export PS1="[C dev env] $PS1"
+			echo "Welcome to your C development environment!"
+		'';
+	};
+  };
 }
