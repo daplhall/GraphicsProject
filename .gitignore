@@ -6,3 +6,4 @@ external/**
 .vscode
 *.tests
 assets/**
+.direnv/**

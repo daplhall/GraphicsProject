@@ -1,2 +1,7 @@
 CompileFlags:
   CompilationDatabase: .
+  QueryDriver:
+    - /nix/store/*/*/bin/*gcc*
+    - /nix/store/*/*/bin/*g++*
+    - /nix/store/*/*/bin/*clang*
+
