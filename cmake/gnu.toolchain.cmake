@@ -43,6 +43,14 @@ set(RASTER_LCFLAGS
     ${RASTER_SANITIZER_FLAGS}
 )
 
+option(ENABLE_LINTING_INCLUDES "Add extra include paths for linting" ON)
+
+if(ENABLE_LINTING_INCLUDES)
+    include_directories(
+        ${PROJECT_SOURCE_DIR}/external/googletest/googletest/include/
+    )
+endif()
+
 
 execute_process(
     COMMAND ${CMAKE_COMMAND} -E create_symlink
