@@ -141,3 +141,13 @@ TEST_F (ArenaDynamic4, SnapshotDynamic)
 	char *old_block = (char *)Arena_push (arena, 1, 1);
 	ASSERT_TRUE (old_block == ref);
 }
+
+TEST_F (ArenaDynamic4, SnapshotDynamicInForwardBlock)
+{
+	char *ptr = (char *)Arena_push (arena, 5, 1);
+	ArenaSnapshot anchor = Arena_snapshot (arena);
+	char *ref = (char *)Arena_push (arena, 1, 1);
+	Arena_rollback (arena, anchor);
+	char *old_block = (char *)Arena_push (arena, 1, 1);
+	ASSERT_TRUE (old_block == ref);
+}
