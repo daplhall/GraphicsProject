@@ -52,7 +52,7 @@ Arena_create (size_t reserve, enum Arena_type type)
 	}
 
 	block_init (list, reserve);
-	*arena = (struct T){ .bottom = list, .type = type };
+	*arena = (struct T){ .bottom = list, .used = 0, .type = type };
 
 	return arena;
 }
@@ -90,13 +90,13 @@ static_push (struct T *arena, size_t nbytes, size_t alignment)
 		return NULL;
 
 	memb->offset += additional;
+	arena->used += additional;
 	return (void *)(next_adress + padding);
 }
 
 static void *
 dynamic_push (struct T *arena, size_t nbytes, size_t alignment)
 {
-
 	struct MemoryBlock *memb = arena->bottom;
 	struct MemoryBlock *new_block = NULL;
 	uintptr_t next_adress, padding;
@@ -115,6 +115,9 @@ dynamic_push (struct T *arena, size_t nbytes, size_t alignment)
 	if ((new_block = ALLOC (sizeof (struct MemoryBlock) + new_size))
 	    == NULL)
 		return NULL;
+
+	arena->used += memb->size - memb->offset;
+	memb->offset = memb->size;
 	block_init (new_block, new_size);
 	new_block->node.prev = &memb->node;
 	arena->bottom = new_block;

@@ -11,7 +11,7 @@ extern "C" {
 #define ArenaIndex size_t
 
 typedef struct _Arena T;
-typedef struct _ArenaSnapshot ArenaSnapshot;
+typedef size_t ArenaSnapshot;
 
 enum Arena_type {
 	ARENA_STATIC,
@@ -29,8 +29,8 @@ void *Arena_push (T *arena, size_t nbytes, size_t alignment);
 void Arena_clear (T *arena);
 T *Arena_create (size_t reserve, enum Arena_type type);
 void Arena_release (T *arena);
-ArenaSnapshot *Arena_snapshot (T *arena);
-void Arena_rollback (T *arena, ArenaSnapshot *snapshot);
+ArenaSnapshot Arena_snapshot (T *arena);
+void Arena_rollback (T *arena, ArenaSnapshot snapshot);
 
 #undef T
 #undef P

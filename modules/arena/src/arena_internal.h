@@ -12,5 +12,6 @@ struct MemoryBlock {
 
 struct T {
 	struct MemoryBlock *bottom;
+	size_t used;
 	enum Arena_type type;
 };
